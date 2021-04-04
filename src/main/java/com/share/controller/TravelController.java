@@ -1,6 +1,5 @@
 package com.share.controller;
 
-
 import com.share.result.RestObject;
 import com.share.result.RestResponse;
 import com.share.ro.TravelRo;
@@ -20,8 +19,6 @@ import java.util.List;
 public class TravelController {
     @Autowired
     TravelService travelService;
-
-
 
     @ApiOperation("查询全部出行")
     @GetMapping("/queryAllTravel")

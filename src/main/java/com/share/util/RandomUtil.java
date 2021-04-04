@@ -25,21 +25,6 @@ public class RandomUtil {
         return randomCode.toString();
     }
 
-
-
-//    public static void createImage(String fileLocation, BufferedImage image) {
-//        try {
-//            FileOutputStream fos = new FileOutputStream(fileLocation);
-//            BufferedOutputStream bos = new BufferedOutputStream(fos);
-//            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(bos);
-//            encoder.encode(image);
-//            bos.close();
-//            fos.close();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     //生成图片(长，宽，高)
     public static void createImage(String checkCode,OutputStream outputStream) throws IOException {
         BufferedImage bi = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
@@ -52,7 +37,6 @@ public class RandomUtil {
 
         ImageIO.write(bi,"jpg",outputStream);
     }
-
 
     //设置各种属性(颜色，字体)
     //设置边框

@@ -31,10 +31,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Value("${privateKey}")
-    private String privateKey;
-    @Value("${publicKey}")
-    private String publicKey;
+
 
 //    @PostMapping("/loginTest")
 //    public void loginTest(UserVo vo){

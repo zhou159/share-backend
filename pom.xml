@@ -47,6 +47,7 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>3.1.0</version>
         </dependency>
+<!--        lombok-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -117,6 +118,13 @@
             <artifactId>annotations</artifactId>
             <version>RELEASE</version>
             <scope>compile</scope>
+        </dependency>
+
+<!--        minio-->
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>7.0.2</version>
         </dependency>
 
 
