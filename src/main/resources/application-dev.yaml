@@ -1,0 +1,49 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/share?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2b8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+#返回值,参数类型别名
+#mapper存放位置：resources目录下mapper目录
+
+mybatis-plus:
+  type-aliases-package: com.share.pojo
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  level:
+    com.share.pojo.mapper : debug
+#    root: debug
+
+
+
+publicKey:
+  MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCctHeR3rx6BvJV7F+jctgXwURn
+  cQRT6UEGkIoN2KNel17K0WC1fDYIoxGg1fhqLnjW1jD5h462r5z8znRQCJXnr/mV
+  g/AidhicioW6EqQReZT3Ehfrv+Rnq/Gfi+Cl2IPOAvpB2zO0Bvlt0b2ukH0cFJUq
+  xZeHiOsAGsqAyrDXBQIDAQAB
+
+
+privateKey:
+  MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAJy0d5HevHoG8lXs
+  X6Ny2BfBRGdxBFPpQQaQig3Yo16XXsrRYLV8NgijEaDV+GoueNbWMPmHjravnPzO
+  dFAIleev+ZWD8CJ2GJyKhboSpBF5lPcSF+u/5Ger8Z+L4KXYg84C+kHbM7QG+W3R
+  va6QfRwUlSrFl4eI6wAayoDKsNcFAgMBAAECgYA7Ly25uhYVQGpmaU/1u3pB/oyH
+  RPgNeRtGD3EUqa2KHEGA+HM+GBuQR4Zw6F9aOxMIkP0OQVR1Sv5PvOnREG0M7M1/
+  16aZqwPcVHoMtvG67NeiaAiehCNKNF3yvYj7cBcCc+SgrPAbJ1J/XVkHDHusVMYA
+  3dD31B3FNMRFTB9QQQJBANC3hU2KKLCDiCzQA08raUUKpIDu+jCe1YgfIYR5/LHS
+  6BOB3fNi8iZ5oWEM6DobASHvuvWQsxrQJ4E2mIWkOJsCQQDANIdOU5f0msuiJzjS
+  YXhlVLbaMFKQvg7/1BLX87lGRc4op1b7VY4rfJXVN25o45YPvzGNUZGwPVXX3cYC
+  zxjfAkB5+YZx1jgJUBUY+0ez0M7ohlu07fRQzcJElszjutaupW7zV4X6YuzZB2QE
+  b6KXsohq6Mr+D95b4SH1JY7lKx/ZAkB8b0WOGyaMsM7XCyeJZJsqlz7OYWyC0tkp
+  HWaZsuunKDhBL51rmEcztjPW100+0ODtDu4IvN9iR0NVPvocBXHnAkBCeME4u+oG
+  R1n1JrLwZembjVOUYJj97xY4PB7TDoI6Rzc6IKrrhLbNirwsbyf5Gcw7+60ArxGJ
+  63AF1SlAgT4L

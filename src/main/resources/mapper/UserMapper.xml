@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.share.mapper.UserMapper">
+    <resultMap id="userList" type="com.share.entity.User">
+        <result column="picture" property="picture"/>
+        <result column="nickname" property="nickname" />
+        <result column="useraccount" property="useraccount" />
+        <result column="address" property="address" />
+        <result column="tel" property="tel" />
+        <result column="gender" property="gender" />
+    </resultMap>
+    <select id="queryUserAll" resultMap="userList">
+        select picture,nickname,useraccount,address,tel,gender from share.user
+    </select>
+
+    <select id="queryUserById" resultType="com.share.ro.UserRo" >
+        select id,picture,nickname,useraccount,address,tel,gender from share.user where id = #{id}
+    </select>
+
+<!--    账号登录-->
+    <select id="queryByAccount" resultType="com.share.entity.User">
+        select  * from share.user where useraccount = #{username} and password = #{password}
+    </select>
+
+<!--    手机号登录-->
+    <select id="queryByTel" resultType="com.share.entity.User">
+        select  * from share.user where tel = #{tel} and password = #{password}
+    </select>
+
+    <!--    账号注册方式-->
+    <insert id="registerUsername" parameterType="com.share.entity.User">
+        insert into share.user (useraccount,password) values (#{username},#{password})
+    </insert>
+
+    <!--    手机号注册方式-->
+    <insert id="registerTel" parameterType="com.share.entity.User">
+        insert into share.user (tel,password) values (#{tel},#{password})
+    </insert>
+
+    <update id="updateUserById" parameterType="com.share.entity.User" >
+<!--        update share.user-->
+<!--        set nickname = #{userVo.nickname},address = #{userVo.address}, tel = #{userVo.tel},gender=#{userVo.gender}-->
+<!--        where id = #{id};-->
+    </update>
+
+
+    <select id="queryUserByTA" resultType="com.share.entity.User">
+        select * from share.user
+        <where>
+            <choose>
+                <when test="username != null and username != ''">
+                    useraccount=#{username}
+                </when>
+                <when test="tel != null and tel != ''">
+                    tel=#{tel}
+                </when>
+            </choose>
+        </where>
+    </select>
+
+<!--    <update id="updateTel" parameterType="com.share.entity.User">-->
+<!--        update  share.user-->
+<!--        set tel=#{UserVo.tel}-->
+<!--        where id=#{id}-->
+<!--    </update>-->
+
+    <update id="updateTP" parameterType="com.share.entity.User">
+        update  share.user
+        <choose>
+            <when test="UserVo.tel != null and UserVo.tel!=''">
+                <set>
+                    tel=#{UserVo.tel}
+                </set>
+            </when>
+            <when test="UserVo.password != null and UserVo.password != ''">
+                <set>
+                    password=#{UserVo.password}
+                </set>
+            </when>
+        </choose>
+        where id=#{id}
+    </update>
+</mapper>

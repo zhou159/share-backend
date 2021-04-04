@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.share.mapper.CollectMapper">
+
+    <insert id="addCollect" parameterType="com.share.entity.Collect">
+        insert into share.collect (user_id,goods_id,createtime) values (#{collectVo.userId},#{collectVo.goodsId},#{collectVo.createTime});
+    </insert>
+
+    <delete id="deleteCollect">
+        delete from share.collect where id=#{id}
+    </delete>
+
+    <select id="queryCollectByUserId" resultType="com.share.ro.CollectRo">
+        select * from share.collect where user_id=#{userId}
+    </select>
+
+    <select id="queryCollectById" resultType="com.share.ro.CollectRo">
+        select * from share.collect where id=#{id}
+    </select>
+</mapper>

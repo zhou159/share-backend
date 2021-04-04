@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.share.mapper.CommentsMapper">
+
+    <insert id="addComments" parameterType="com.share.entity.Comments">
+        insert into share.comments (user_id_commentator,user_id_assessee,travel_id,article_id,createTime,text,replay) values (#{commentsVo.userIdCommentator},#{commentsVo.userIdAssessee},#{commentsVo.travelId},#{commentsVo.articleId},#{commentsVo.createTime},#{commentsVo.text},#{commentsVo.replay})
+    </insert>
+
+    <delete id="deleteComments">
+        delete from share.comments where id=#{id}
+    </delete>
+
+    <select id="queryCommentsById" resultType="com.share.ro.CommentsRo">
+        select * from share.comments
+        <choose>
+            <when test="commentsVo.articleId != null">
+                where article_id=#{commentsVo.articleId};
+            </when>
+            <when test="commentsVo.travelId != null">
+                where article_id=#{commentsVo.travelId};
+            </when>
+            <otherwise>
+                where user_id_assessee=#{commentsVo.userIdAssessee}
+            </otherwise>
+        </choose>
+    </select>
+</mapper>

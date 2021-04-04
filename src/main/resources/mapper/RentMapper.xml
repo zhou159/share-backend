@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.share.mapper.RentMapper">
+
+    <select id="queryAllRent" resultType="com.share.ro.RentRo">
+        select * from share.rent
+    </select>
+
+    <select id="queryRentByUserId" resultType="com.share.ro.RentRo">
+        select * from share.rent where user_id_rent=#{userIdRent}
+    </select>
+
+    <insert id="addRent">
+        insert into share.rent
+        <if test="rentVo.type == '房屋'">
+            (user_id_rent,type,department_address,price,createtime)
+            values (#{rentVo.userIdRent},#{rentVo.type},#{rentVo.departmentAddress},#{rentVo.price},#{rentVo.createTime});
+        </if>
+        <if test="rentVo.type == '车位'">
+            (user_id_rent,type,parking_address,price,createtime)
+            values (#{rentVo.userIdRent},#{rentVo.type},#{rentVo.parkingAddress},#{rentVo.price},#{rentVo.createTime});
+        </if>
+    </insert>
+
+    <update id="updateRent">
+        update share.rent
+        set type=#{rentVo.type},department_address=#{rentVo.departmentAddress},
+            parking_address=#{rentVo.parkingAddress},price=#{rentVo.price},updatetime=#{rentVo.updateTime}
+        where id=#{id}
+    </update>
+
+    <update id="updateRenter">
+        update share.rent
+        set user_id_renter = #{rentVo.userIdRenter}
+        where id=#{id};
+    </update>
+
+    <update id="deleteRent">
+        update share.rent
+        set deleted = #{rentVo.deleted}
+        where id=#{id};
+    </update>
+
+    <update id="updateStatus">
+        update share.rent
+        set status = #{rentVo.status}
+        where id=#{id};
+    </update>
+</mapper>

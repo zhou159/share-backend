@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.share.mapper.OrderMapper">
+
+    <select id="queryOrderByUserId" resultType="com.share.ro.OrderRo">
+        select * from share.order where user_id=#{userId}
+    </select>
+
+    <select id="queryOrderById" resultType="com.share.ro.OrderRo">
+        select * from share.order where id=#{id}
+    </select>
+
+    <select id="queryOrderByOrderNo" resultType="com.share.ro.OrderRo">
+        select * from share.order where order_no=#{orderNo}
+    </select>
+
+    <insert id="addOrder">
+        insert into share.order (createtime,order_no,goods_id,user_id,deleted)
+        values (#{orderVo.createTime},#{orderVo.orderNo},#{orderVo.goodsId},#{orderVo.userId},#{orderVo.deleted})
+    </insert>
+
+    <update id="updateOrder">
+        update share.order
+        set status = #{orderVo.status}
+        where id=#{id};
+    </update>
+
+    <update id="deleteOrder">
+        update share.order
+        set  deleted = #{orderVo.deleted}
+        where id=#{id};
+    </update>
+
+
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.share.mapper.HistoryMapper">
+
+    <insert id="addHistory">
+        insert into share.history
+        <choose>
+            <when test="historyVo.goodsId != null">
+                (user_id,goods_id,lasttime)
+                values (#{historyVo.userId},#{historyVo.goodsId},#{historyVo.lastTime})
+            </when>
+            <when test="historyVo.helpId != null">
+                (user_id,help_id,lasttime)
+                values (#{historyVo.userId},#{historyVo.helpId},#{historyVo.lastTime})
+            </when>
+            <when test="historyVo.rentId != null">
+                (user_id,rent_id,lasttime)
+                values (#{historyVo.userId},#{historyVo.rentId},#{historyVo.lastTime})
+            </when>
+            <when test="historyVo.travelId != null">
+                (user_id,travel_id,lasttime)
+                values (#{historyVo.userId},#{historyVo.travelId},#{historyVo.lastTime})
+            </when>
+        </choose>
+    </insert>
+
+    <delete id="deleteHistory">
+        delete from share.history where id=#{id}
+    </delete>
+
+    <select id="queryHistoryByUserId" resultType="com.share.ro.HistoryRo">
+        select * from share.history where user_id=#{userId}
+    </select>
+
+    <select id="queryHistoryByObjId" resultType="com.share.ro.HistoryRo">
+        select * from share.history
+        <where>
+            <if test="historyVo.goodsId != null">
+                goods_id=#{historyVo.goodsId}
+            </if>
+            <if test="historyVo.helpId != null">
+                help_id=#{historyVo.helpId}
+            </if>
+            <if test="historyVo.rentId != null">
+                rent_id=#{historyVo.rentId}
+            </if>
+            <if test="historyVo.travelId != null">
+                travel_id=#{historyVo.travelId}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateHistory">
+        update share.history
+        set lasttime = #{historyVo.lastTime}
+        <where>
+            <if test="historyVo.goodsId != null">
+                goods_id=#{historyVo.goodsId}
+            </if>
+            <if test="historyVo.helpId != null">
+                help_id=#{historyVo.helpId}
+            </if>
+            <if test="historyVo.rentId != null">
+                rent_id=#{historyVo.rentId}
+            </if>
+            <if test="historyVo.travelId != null">
+                travel_id=#{historyVo.travelId}
+            </if>
+        </where>
+    </update>
+</mapper>

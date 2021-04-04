@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.share.mapper.TravelMapper">
+
+    <select id="queryAllTravel" resultType="com.share.ro.TravelRo">
+        select * from share.travel
+    </select>
+
+    <select id="queryTravelByUserId" resultType="com.share.ro.TravelRo">
+        select * from share.travel where user_id=#{userId}
+    </select>
+
+    <insert id="addTravel">
+        insert into share.travel
+        (user_id,destination,departure_time,return_time,details,createtime)
+        values (#{travelVo.userId},#{travelVo.destination},#{travelVo.departureTime},
+        #{travelVo.returnTime},#{travelVo.details},#{travelVo.createTime})
+    </insert>
+
+    <update id="updateTravel">
+        update share.travel
+        set destination=#{travelVo.destination},departure_time=#{travelVo.departureTime},
+            return_time=#{travelVo.returnTime},details=#{travelVo.details},updatetime=#{travelVo.updateTime}
+        where id=#{id};
+    </update>
+
+    <update id="deleteTravel">
+        update share.travel
+        set  deleted=#{travelVo.deleted}
+        where id=#{id};
+    </update>
+
+    <update id="updateStatus">
+        update share.travel
+        set  status=#{travelVo.status}
+        where id=#{id};
+    </update>
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.share.mapper.HelpMapper">
+
+    <insert id="addHelp">
+        insert into share.help
+        <if test="helpVo.type == '外卖'">
+            (user_id_help,type,delivery_address,delivery_man_tel,price,createtime)
+            values (#{helpVo.userIdHelp},#{helpVo.type},#{helpVo.deliveryAddress},
+                    #{helpVo.deliveryManTel},#{helpVo.price},#{helpVo.createTime})
+        </if>
+        <if test="helpVo.type == '快递'">
+            (user_id_help,type,parcel_address,parcel_proof,price,createtime)
+            values (#{helpVo.userIdHelp},#{helpVo.type},#{helpVo.parcelAddress},
+                    #{helpVo.parcelProof},#{helpVo.price},#{helpVo.createTime})
+        </if>
+    </insert>
+
+    <update id="updateHelp">
+        update share.help
+        set type=#{helpVo.type},delivery_address=#{helpVo.deliveryAddress},
+            delivery_man_tel=#{helpVo.deliveryManTel},
+            parcel_address=#{helpVo.parcelAddress},parcel_proof=#{helpVo.parcelProof},
+            price=#{helpVo.price},updatetime=#{helpVo.updateTime}
+        where id=#{id};
+    </update>
+
+    <update id="updateHelper">
+        update share.goods
+        set user_id_helper = #{helpVo.userIdHelper}
+        where id=#{id};
+    </update>
+
+    <delete id="deleteHelp">
+        delete from share.goods where id=#{id}
+    </delete>
+
+    <select id="queryAllHelp" resultType="com.share.ro.HelpRo">
+        select * from share.goods
+    </select>
+
+    <select id="queryHelperByUserId" resultType="com.share.ro.HelpRo">
+        select * from share.goods where user_id_helper=#{userIdHelper}
+    </select>
+
+    <select id="queryHelpByUserId" resultType="com.share.ro.HelpRo">
+        select * from share.goods where user_id_help=#{userIdHelp}
+    </select>
+
+    <select id="queryHelpById" resultType="com.share.ro.HelpRo">
+
+    </select>
+
+
+</mapper>
