@@ -36,26 +36,6 @@ public class UserService {
         return userMapper.queryUserById(id);
     }
 
-//    public boolean queryByUsername(UserVo vo) {
-//        if(vo.getPassword().equals("") || vo.getUsername().equals("")){
-//            throw new UserException("账号或密码不能为空!");
-//        }else{
-//            RSA rsa = new RSA(privateKey,null);
-//            String username = rsa.decryptStr(vo.getUsername(), KeyType.PrivateKey);
-//            String password = rsa.decryptStr(vo.getPassword(),KeyType.PrivateKey);
-//
-//            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-//            queryWrapper.eq("useraccount",username);
-//            queryWrapper.eq("password",password);
-//            User user = userMapper.selectOne(queryWrapper);
-//            if (user != null) {
-//                return true;
-//            }
-//            return false;
-//        }
-//
-//    }
-
     //按用户名、密码查询用户
     public boolean queryByUsername(UserVo vo) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();

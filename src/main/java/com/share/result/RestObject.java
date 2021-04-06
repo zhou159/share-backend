@@ -1,6 +1,5 @@
 package com.share.result;
 
-
 import com.share.enums.RestCode;
 
 /**

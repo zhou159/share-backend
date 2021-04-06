@@ -35,5 +35,4 @@ public class HistoryService {
         return historyMapper.updateHistory(historyVo);
     }
 
-
 }

@@ -3,7 +3,6 @@ package com.share.service;
 import com.share.mapper.RentMapper;
 import com.share.ro.RentRo;
 import com.share.vo.RentVo;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +52,5 @@ public class RentService {
         rentMapper.deleteRent(id, rentVo);
         return 0;
     }
-
 
 }

@@ -1,6 +1,5 @@
 package com.share.controller;
 
-
 import com.share.result.RestObject;
 import com.share.result.RestResponse;
 import com.share.ro.RentRo;

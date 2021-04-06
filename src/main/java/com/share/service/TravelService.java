@@ -3,7 +3,6 @@ package com.share.service;
 import com.share.mapper.TravelMapper;
 import com.share.ro.TravelRo;
 import com.share.vo.TravelVo;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +46,5 @@ public class TravelService {
         travelMapper.deleteTravel(id, travelVo);
         return 0;
     }
-
 
 }

@@ -9,7 +9,6 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-
 @Mapper
 public interface GoodsMapper extends BaseMapper<Goods> {
     //查询全部交易物品
@@ -29,6 +28,4 @@ public interface GoodsMapper extends BaseMapper<Goods> {
 
     //修改交易交易物品状态(删除)
     int updateGoodsStatus(@Param("id")int id,@Param("goodsVo")GoodsVo goodsVo);
-
-
 }

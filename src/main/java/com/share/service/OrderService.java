@@ -3,7 +3,6 @@ package com.share.service;
 import com.share.mapper.OrderMapper;
 import com.share.ro.OrderRo;
 import com.share.vo.OrderVo;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +39,5 @@ public class OrderService {
         orderMapper.deleteOrder(id, orderVo);
         return 0;
     }
-
 
 }

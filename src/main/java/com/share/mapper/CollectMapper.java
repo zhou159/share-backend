@@ -23,5 +23,4 @@ public interface CollectMapper extends BaseMapper<Collect> {
     //查询收藏(收藏物id)
     CollectRo queryCollectById(@Param("id")int id);
 
-
 }

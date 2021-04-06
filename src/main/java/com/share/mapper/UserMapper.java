@@ -1,7 +1,6 @@
 package com.share.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.share.entity.User;
 import com.share.ro.UserRo;
 import com.share.vo.UserVo;

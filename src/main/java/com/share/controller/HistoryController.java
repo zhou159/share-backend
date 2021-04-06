@@ -45,17 +45,4 @@ public class HistoryController {
         return RestResponse.makeOKRsp(historyService.queryHistoryByUserId(userId));
     }
 
-//    @ApiOperation("通过对象id查询历史记录")
-//    @GetMapping("/queryHistoryByObjId")
-//    public RestObject<HistoryRo> queryHistoryByObjId(@RequestBody HistoryVo historyVo){
-//        return RestResponse.makeOKRsp(historyService.queryHistoryByObjId(historyVo));
-//    }
-//
-//    @ApiOperation("修改历史记录时间")
-//    @GetMapping("/updateHistory")
-//    public RestObject<String> updateHistory(@RequestBody HistoryVo historyVo){
-//        historyVo.setLastTime(LocalDateTime.now());
-//        historyService.updateHistory(historyVo);
-//        return RestResponse.makeOKRsp("修改成功");
-//    }
 }

@@ -4,11 +4,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
-
 import com.share.enums.Source;
 
 import javax.imageio.ImageIO;
-
 
 public class RandomUtil {
     private static int width = 62;
@@ -52,8 +50,6 @@ public class RandomUtil {
         g.setColor(Color.white);
         g.fillRect(0,0,width,height);
     }
-
-
 
 
 }

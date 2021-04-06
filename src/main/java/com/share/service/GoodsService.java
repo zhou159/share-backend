@@ -1,6 +1,5 @@
 package com.share.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.share.mapper.GoodsMapper;
 import com.share.ro.GoodsRo;
 import com.share.vo.GoodsVo;
