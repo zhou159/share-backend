@@ -20,26 +20,20 @@ public interface UserMapper extends BaseMapper<User> {
     //查询用户id
     UserRo queryUserById(@Param("id")Integer id);
 
-//    //查询用户tel,useraccount
+    //查询用户tel,useraccount
     User queryUserByTA(@Param("tel")String tel,@Param("username") String username);
 
-    //登录事务:账号方式
+    //登录:账号方式
     User queryByAccount(@Param("username") String username, @Param("password") String password);
 
-    //登录事务:电话号码
+    //登录:电话号码
     User queryByTel(@Param("tel") String tel, @Param("password") String password);
 
-    //注册事务(增加)
+    //注册:用户名(增加)
     int registerUsername(@Param("username") String username, @Param("password") String password);
 
-    //注册事务(增加)
+    //注册:电话号(增加)
     int registerTel(@Param("tel") String tel, @Param("password") String password);
-
-    //修改用户信息
-//    int updateUserById(@Param("id")int id,@Param("userVo") UserVo userVo); //改为mybatis-plus自带的单表修改方法
-
-    //绑定或修改电话号码
-//    int updateTel(@Param("id")Integer id,@Param("UserVo")UserVo userVo);
 
     //修改密码
     int updateTP(@Param("id")Integer id,@Param("UserVo")UserVo userVo);

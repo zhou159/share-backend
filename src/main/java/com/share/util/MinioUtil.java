@@ -4,13 +4,10 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import io.minio.MinioClient;
 import io.minio.ObjectStat;
 import io.minio.PutObjectOptions;
-import io.minio.Result;
 import io.minio.errors.*;
-import io.minio.messages.Bucket;
-import io.minio.messages.DeleteError;
-import io.minio.messages.Item;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,14 +15,16 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
 
 @Component
 public class MinioUtil {
     private static final Integer DEFAULT_EXPIRY_TIME = 7 * 24 * 3600;
     @Autowired
     private MinioClient minioClient;
+
+    @Value("${minio.bucketName}")
+    private String bucketName;
 
 //    检测桶是否存在
     @SneakyThrows
@@ -47,95 +46,6 @@ public class MinioUtil {
         } else {
             return false;
         }
-    }
-
-    /**
-     * 列出所有存储桶名称
-     *
-     * @return
-     */
-    @SneakyThrows
-    public List<String> listBucketNames() {
-        List<Bucket> bucketList = listBuckets();
-        List<String> bucketListName = new ArrayList<>();
-        for (Bucket bucket : bucketList) {
-            bucketListName.add(bucket.name());
-        }
-        return bucketListName;
-    }
-
-    /**
-     * 列出所有存储桶
-     *
-     * @return
-     */
-    @SneakyThrows
-    public List<Bucket> listBuckets() {
-        return minioClient.listBuckets();
-    }
-
-    /**
-     * 删除存储桶
-     *
-     * @param bucketName 存储桶名称
-     * @return
-     */
-    @SneakyThrows
-    public boolean removeBucket(String bucketName) {
-        boolean flag = bucketExists(bucketName);
-        if (flag) {
-            Iterable<Result<Item>> myObjects = listObjects(bucketName);
-            for (Result<Item> result : myObjects) {
-                Item item = result.get();
-                // 有对象文件，则删除失败
-                if (item.size() > 0) {
-                    return false;
-                }
-            }
-            // 删除存储桶，注意，只有存储桶为空时才能删除成功。
-            minioClient.removeBucket(bucketName);
-            flag = bucketExists(bucketName);
-            if (!flag) {
-                return true;
-            }
-
-        }
-        return false;
-    }
-
-    /**
-     * 列出存储桶中的所有对象名称
-     *
-     * @param bucketName 存储桶名称
-     * @return
-     */
-    @SneakyThrows
-    public List<String> listObjectNames(String bucketName) {
-        List<String> listObjectNames = new ArrayList<>();
-        boolean flag = bucketExists(bucketName);
-        if (flag) {
-            Iterable<Result<Item>> myObjects = listObjects(bucketName);
-            for (Result<Item> result : myObjects) {
-                Item item = result.get();
-                listObjectNames.add(item.objectName());
-            }
-        }
-        return listObjectNames;
-    }
-
-    /**
-     * 列出存储桶中的所有对象
-     *
-     * @param bucketName 存储桶名称
-     * @return
-     */
-    @SneakyThrows
-    public Iterable<Result<Item>> listObjects(String bucketName) {
-        boolean flag = bucketExists(bucketName);
-        if (flag) {
-            return minioClient.listObjects(bucketName);
-        }
-        return null;
     }
 
     /**
@@ -257,42 +167,6 @@ public class MinioUtil {
         return false;
     }
 
-    /**
-     * 删除一个对象
-     *
-     * @param bucketName 存储桶名称
-     * @param objectName 存储桶里的对象名称
-     */
-    @SneakyThrows
-    public boolean removeObject(String bucketName, String objectName) {
-        boolean flag = bucketExists(bucketName);
-        if (flag) {
-            minioClient.removeObject(bucketName, objectName);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 删除指定桶的多个文件对象,返回删除错误的对象列表，全部删除成功，返回空列表
-     *
-     * @param bucketName  存储桶名称
-     * @param objectNames 含有要删除的多个object名称的迭代器对象
-     * @return
-     */
-    @SneakyThrows
-    public List<String> removeObject(String bucketName, List<String> objectNames) {
-        List<String> deleteErrorNames = new ArrayList<>();
-        boolean flag = bucketExists(bucketName);
-        if (flag) {
-            Iterable<Result<DeleteError>> results = minioClient.removeObjects(bucketName, objectNames);
-            for (Result<DeleteError> result : results) {
-                DeleteError error = result.get();
-                deleteErrorNames.add(error.objectName());
-            }
-        }
-        return deleteErrorNames;
-    }
 
     /**
      * 生成一个给HTTP GET请求用的presigned URL。
@@ -398,6 +272,31 @@ public class MinioUtil {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public String upload(MultipartFile file,String foldername) {
+        if (file.isEmpty() || file.getSize() == 0) {
+            return "文件为空";
+        }
+        try {
+            if (!bucketExists(bucketName)) {
+                makeBucket(bucketName);
+            }
+
+            String fileName = file.getOriginalFilename();
+            String newName = foldername + "/" + UUID.randomUUID().toString().replaceAll("-", "")
+                    + fileName.substring(fileName.lastIndexOf("."));
+
+            InputStream inputStream = file.getInputStream();
+            putObject(bucketName, newName, inputStream);
+            inputStream.close();
+
+            String url = getObjectUrl(bucketName, newName);
+            return url;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "上传失败";
         }
     }
 

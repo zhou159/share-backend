@@ -5,6 +5,7 @@ import com.share.entity.User;
 import com.share.result.RestObject;
 import com.share.result.RestResponse;
 import com.share.service.UserService;
+import com.share.util.MinioUtil;
 import com.share.util.RandomUtil;
 import com.share.enums.Source;
 import com.share.vo.UserVo;
@@ -12,14 +13,16 @@ import com.share.ro.UserRo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.UUID;
 
 import static com.share.util.RandomUtil.createImage;
 
@@ -31,16 +34,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private MinioUtil minioUtil;
 
-
-//    @PostMapping("/loginTest")
-//    public void loginTest(UserVo vo){
-//        RSA rsa = new RSA(privateKey,null);
-//        String username = rsa.decryptStr(vo.getUsername(),KeyType.PrivateKey);
-//        String password = rsa.decryptStr(vo.getUsername(),KeyType.PrivateKey);
-//
-//        System.out.println(username+"\n"+password);
-//    }
 
     @ApiOperation("按userRo格式返回查询出的所有user对象，一般用户:管理员")
     @GetMapping("/alluser")
@@ -162,6 +158,19 @@ public class UserController {
         }
     }
 
+    @ApiOperation("根据id修改用户头像图片")
+    @PostMapping("/updatePicture/{id}")
+    public RestObject<String> updatePicture(@PathVariable int id,MultipartFile file){
+        String s = minioUtil.upload(file,"user");
+        if(s.equals("文件为空") || s.equals("上传失败")){
+            throw new ShareException("图片上传失败,请更换图片或重新尝试!");
+        }else {
+            System.out.println(s);
+            userService.updatePicture(id, s);
+            return RestResponse.makeOKRsp("修改成功!");
+        }
+    }
+
     @ApiOperation("根据id修改密码")
     @PostMapping("/updatePwd/{id}")
     public RestObject<String> updatePwd(@PathVariable int id, @RequestBody UserVo userVo,HttpSession session){
@@ -183,7 +192,6 @@ public class UserController {
     @ApiOperation(value = "验证码")
     @GetMapping("/verifyCode")
     public void verifyCode(HttpSession session, HttpServletResponse response) {
-
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             String code = RandomUtil.createRandom(4,Source.numLetter,Source.numLetter.getSources().length());

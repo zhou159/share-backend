@@ -39,13 +39,6 @@
         insert into share.user (tel,password) values (#{tel},#{password})
     </insert>
 
-    <update id="updateUserById" parameterType="com.share.entity.User" >
-<!--        update share.user-->
-<!--        set nickname = #{userVo.nickname},address = #{userVo.address}, tel = #{userVo.tel},gender=#{userVo.gender}-->
-<!--        where id = #{id};-->
-    </update>
-
-
     <select id="queryUserByTA" resultType="com.share.entity.User">
         select * from share.user
         <where>
@@ -59,12 +52,6 @@
             </choose>
         </where>
     </select>
-
-<!--    <update id="updateTel" parameterType="com.share.entity.User">-->
-<!--        update  share.user-->
-<!--        set tel=#{UserVo.tel}-->
-<!--        where id=#{id}-->
-<!--    </update>-->
 
     <update id="updateTP" parameterType="com.share.entity.User">
         update  share.user

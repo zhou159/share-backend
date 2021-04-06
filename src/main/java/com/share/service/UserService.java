@@ -56,6 +56,7 @@ public class UserService {
 //
 //    }
 
+    //按用户名、密码查询用户
     public boolean queryByUsername(UserVo vo) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("useraccount",vo.getUsername());
@@ -67,7 +68,7 @@ public class UserService {
         return false;
     }
 
-
+    //按电话号码、密码查询用户
     public boolean queryByTel(UserVo vo){
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("tel",vo.getTel());
@@ -79,41 +80,41 @@ public class UserService {
         return false;
     }
 
+    //按用户名方式注册用户
     public void registerUsername(UserVo vo){
         userMapper.registerUsername(vo.getUsername(), vo.getPassword());
     }
 
+    //按电话号码方式注册用户
     public void registerTel(UserVo vo){
         userMapper.registerTel(vo.getTel(), vo.getPassword());
     }
 
+    //通过电话号、用户名查询用户
     public User queryUserByTA(UserVo vo){
         return userMapper.queryUserByTA(vo.getTel(),vo.getUsername());
     }
 
-//    public int updateUser(int id,UserRo ro){
-//        User user = new User();
-//        BeanUtils.copyProperties(ro,user);
-//        user.setId(id);
-//        userMapper.updateById(user);
-//        return 0;
-//    }
+    //更新用户信息
     public int updateUser(int id,UserVo vo){
         User user = new User();
         BeanUtils.copyProperties(vo,user);
         user.setId(id);
         userMapper.updateById(user);
-        //userMapper.updateUserById(id,vo);
         return 0;
     }
 
-//    public int updateTel(int id,UserVo vo){
-//        userMapper.updateTel(id,vo);
-//        return 0;
-//    }
-
+    //更改电话号码、密码
     public int updateTP(int id,UserVo vo){
         userMapper.updateTP(id,vo);
         return 0;
+    }
+
+    //修改图片
+    public void updatePicture(int id,String picture){
+        User user = new User();
+        user.setId(id);
+        user.setPicture(picture);
+        userMapper.updateById(user);
     }
 }
