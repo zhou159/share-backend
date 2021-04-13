@@ -11,6 +11,10 @@ spring:
     multipart:
       max-file-size: -1 #单个上传文件大小无限制
       max-request-size: -1 #单次上传文件大小无限制
+  redis:
+    host: 39.97.220.152
+    port: 6379
+    password: 123456
 
 #返回值,参数类型别名
 #mapper存放位置：resources目录下mapper目录
