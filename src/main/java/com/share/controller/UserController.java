@@ -4,18 +4,20 @@ import com.share.exceptions.ShareException;
 import com.share.entity.User;
 import com.share.result.RestObject;
 import com.share.result.RestResponse;
+import com.share.ro.UserRo;
 import com.share.service.UserService;
 import com.share.util.MinioUtil;
 import com.share.util.RandomUtil;
 import com.share.enums.Source;
+import com.share.util.RedisUtil;
 import com.share.vo.UserVo;
-import com.share.ro.UserRo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.ByteArrayOutputStream;
@@ -27,12 +29,16 @@ import static com.share.util.RandomUtil.createImage;
 @Api("用户模块")
 @RestController
 @RequestMapping("/user")
+@CrossOrigin
 public class UserController {
     @Autowired
     private UserService userService;
 
     @Autowired
     private MinioUtil minioUtil;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
 
     @ApiOperation("按userRo格式返回查询出的所有user对象，一般用户:管理员")
@@ -51,6 +57,8 @@ public class UserController {
     @PostMapping("/loginusername")
     public RestObject<String> loginByUsername(@RequestBody UserVo userLoginVo,HttpSession session){
         Object code = session.getAttribute("VerifyCode");
+        //Object code = redisUtil.get("verifyCode");
+        System.out.println(session.getId());
         if(userLoginVo.getUsername().equals("") || userLoginVo.getPassword().equals("")){
             throw new ShareException("账号密码不能为空!");
         }else{
@@ -188,21 +196,26 @@ public class UserController {
 
     @ApiOperation(value = "验证码")
     @GetMapping("/verifyCode")
-    public void verifyCode(HttpSession session, HttpServletResponse response) {
+    public void verifyCode(HttpSession session, HttpServletResponse response, HttpServletRequest request) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             String code = RandomUtil.createRandom(4,Source.numLetter,Source.numLetter.getSources().length());
+            //redisUtil.setex("verifyCode",code,1);
             createImage(code,baos);
             //将VerifyCode绑定session
             session.setAttribute("VerifyCode",code);
+            System.out.println(session.getId());
             //设置响应头
             response.setHeader("Pragma", "no-cache");
             //设置响应头
             response.setHeader("Cache-Control", "no-cache");
+            //防止多次获得的sessionid改变
+            response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
             //在代理服务器端防止缓冲
             response.setDateHeader("Expires", 0);
             //设置响应内容类型
             response.setContentType("image/jpeg");
+
             response.getOutputStream().write(baos.toByteArray());
             response.getOutputStream().flush();
             baos.close();

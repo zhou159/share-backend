@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-@ApiModel("前端接收的用户数据")
+@ApiModel("前端传入的用户数据")
 public class UserVo {
     @ApiModelProperty("用户id")
     private int id;
