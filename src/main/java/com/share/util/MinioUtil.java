@@ -118,6 +118,13 @@ public class MinioUtil {
     }
 
 
+    /**
+     * 文件访问路径
+     *
+     * @param file 上传的文件
+     * @param foldername 文件夹名字
+     * @return 文件访问路径
+     */
     public String upload(MultipartFile file,String foldername) {
         if (file.isEmpty() || file.getSize() == 0) {
             return "文件为空";

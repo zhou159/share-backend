@@ -29,8 +29,12 @@ public class ArticleService {
         return articleMapper.queryAllArticle();
     }
 
-    public List<ArticleRo> queryArticleById(int id){
+    public ArticleRo queryArticleById(int id){
         return articleMapper.queryArticleById(id);
+    }
+
+    public List<ArticleRo> queryArticleByUserId(int userId){
+        return articleMapper.queryArticleByUserId(userId);
     }
 
 

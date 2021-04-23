@@ -4,8 +4,10 @@ import com.share.exceptions.ShareException;
 import com.share.entity.User;
 import com.share.result.RestObject;
 import com.share.result.RestResponse;
+import com.share.ro.IDCardRo;
 import com.share.ro.UserRo;
 import com.share.service.UserService;
+import com.share.util.IDCardUtil;
 import com.share.util.MinioUtil;
 import com.share.util.RandomUtil;
 import com.share.enums.Source;
@@ -17,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.ByteArrayOutputStream;
@@ -40,8 +41,11 @@ public class UserController {
     @Autowired
     private RedisUtil redisUtil;
 
+    @Autowired
+    private IDCardUtil idCardUtil;
 
-    @ApiOperation("按userRo格式返回查询出的所有user对象，一般用户:管理员")
+
+    @ApiOperation("按userRo格式返回查询出的所有user对象")
     @GetMapping("/alluser")
     public RestObject<List<UserRo>> queryUserAll(){
         return RestResponse.makeOKRsp(userService.queryUserAll());
@@ -55,17 +59,17 @@ public class UserController {
 
     @ApiOperation("通过账户方式登录")
     @PostMapping("/loginusername")
-    public RestObject<String> loginByUsername(@RequestBody UserVo userLoginVo,HttpSession session){
+    public RestObject<String> loginByUsername(@RequestBody UserVo userVo,HttpSession session){
         Object code = session.getAttribute("VerifyCode");
         //Object code = redisUtil.get("verifyCode");
-        System.out.println(session.getId());
-        if(userLoginVo.getUsername().equals("") || userLoginVo.getPassword().equals("")){
+        String userCode = userVo.getCheckCode().toUpperCase();
+        if(userVo.getUsername().equals("") || userVo.getPassword().equals("")){
             throw new ShareException("账号密码不能为空!");
         }else{
-            if(userLoginVo.getCheckCode().equals(code)) {
-                boolean login = userService.queryByUsername(userLoginVo);
+            if(userCode.equals(code)) {
+                boolean login = userService.queryByUsername(userVo);
                 if (login) {
-                    session.setAttribute("userInfo",userService.queryUserByTA(userLoginVo));
+                    session.setAttribute("userInfo",userService.queryUserByTA(userVo));
                     return RestResponse.makeOKRsp("登录成功!");
                 }else {
                     throw new ShareException("请输入正确的账号以及密码!");
@@ -78,15 +82,16 @@ public class UserController {
 
     @ApiOperation("通过电话方式登录")
     @PostMapping("/logintel")
-    public RestObject<String> loginByTel(@RequestBody UserVo userLoginVo,HttpSession session){
+    public RestObject<String> loginByTel(@RequestBody UserVo userVo,HttpSession session){
         Object code = session.getAttribute("VerifyCode");
-        if(userLoginVo.getPassword().equals("") || userLoginVo.getTel().equals("") || userLoginVo.getCheckCode().equals("")){
+        String userCode = userVo.getCheckCode().toUpperCase();
+        if(userCode.equals("") || userVo.getTel().equals("") || userVo.getCheckCode().equals("")){
             throw new ShareException("电话号、密码或验证码不能为空!");
         }else{
-            if(userLoginVo.getCheckCode().equals(code)) {
-                boolean login = userService.queryByTel(userLoginVo);
+            if(userVo.getCheckCode().equals(code)) {
+                boolean login = userService.queryByTel(userVo);
                 if (login) {
-                    session.setAttribute("userInfo",userService.queryUserByTA(userLoginVo));
+                    session.setAttribute("userInfo",userService.queryUserByTA(userVo));
                     return RestResponse.makeOKRsp("登录成功!");
                 } else {
                     throw new ShareException("请输入正确的电话号码以及密码!");
@@ -99,17 +104,28 @@ public class UserController {
 
     @ApiOperation("通过账户方式注册")
     @PostMapping("/registerUsername")
-    public RestObject<String> registerUsername(@RequestBody UserVo userLoginVo,HttpSession session){
+    public RestObject<String> registerUsername(@RequestBody UserVo userVo,HttpSession session){
         Object code = session.getAttribute("VerifyCode");
-        if (userLoginVo.getUsername().equals("") || userLoginVo.getPassword().equals("") || userLoginVo.getCheckCode().equals("")){
+        System.out.println(session.getId());
+        String userCode = userVo.getCheckCode().toUpperCase();
+        if (userVo.getUsername().equals("") || userVo.getPassword().equals("") || userCode.equals("")){
             throw new ShareException("账户、密码或验证码不能为空!");
         }else {
-            if(userLoginVo.getCheckCode().equals(code)){
-                User user = userService.queryUserByTA(userLoginVo);
+            if(userCode.equals(code)){
+                User user = userService.queryUserByTA(userVo);
                 if (user != null){
                     throw new ShareException("用户名已被注册!");
                 }else {
-                    userService.registerUsername(userLoginVo);
+                    String nickName = RandomUtil.createRandom(16,Source.symbolNumLetter,Source.symbolNumLetter.getSources().length());
+                    User user1 = userService.queryByNickName(nickName);
+                    if (user1!=null){
+                        while (user1!=null){
+                            nickName = RandomUtil.createRandom(16,Source.symbolNumLetter,Source.symbolNumLetter.getSources().length());
+                            user1 = userService.queryByNickName(nickName);
+                        }
+                    }
+                    userVo.setNickname(nickName);
+                    userService.registerUsername(userVo);
                     return RestResponse.makeOKRsp("注册成功!");
                 }
             }else {
@@ -120,17 +136,27 @@ public class UserController {
 
     @ApiOperation("通过电话方式注册")
     @PostMapping("/registertel")
-    public RestObject<String> registerTel(@RequestBody UserVo userLoginVo,HttpSession session){
+    public RestObject<String> registerTel(@RequestBody UserVo userVo,HttpSession session){
         Object code = session.getAttribute("VerifyCode");
-        if (userLoginVo.getTel().equals("") || userLoginVo.getPassword().equals("") || userLoginVo.getCheckCode().equals("")){
+        String userCode = userVo.getCheckCode().toUpperCase();
+        if (userVo.getTel().equals("") || userVo.getPassword().equals("") || userCode.equals("")){
             throw new ShareException("电话号码、密码或验证码不能为空!");
         }else {
-            if (userLoginVo.getCheckCode().equals(code)){
-                User user = userService.queryUserByTA(userLoginVo);
+            if (userVo.getCheckCode().equals(code)){
+                User user = userService.queryUserByTA(userVo);
                 if (user != null){
                     throw new ShareException("该电话号码已注册!");
                 }else {
-                    userService.registerTel(userLoginVo);
+                    String nickName = RandomUtil.createRandom(16,Source.symbolNumLetter,Source.symbolNumLetter.getSources().length());
+                    User user1 = userService.queryByNickName(nickName);
+                    if (user1!=null){
+                        while (user1!=null){
+                            nickName = RandomUtil.createRandom(16,Source.symbolNumLetter,Source.symbolNumLetter.getSources().length());
+                            user1 = userService.queryByNickName(nickName);
+                        }
+                    }
+                    userVo.setNickname(nickName);
+                    userService.registerTel(userVo);
                     return RestResponse.makeOKRsp("注册成功!");
                 }
             }else {
@@ -166,11 +192,10 @@ public class UserController {
     @ApiOperation("根据id修改用户头像图片")
     @PostMapping("/updatePicture/{id}")
     public RestObject<String> updatePicture(@PathVariable int id,MultipartFile file){
-        String s = minioUtil.upload(file,"user");
+        String s = minioUtil.upload(file,"user-");
         if(s.equals("文件为空") || s.equals("上传失败")){
             throw new ShareException("图片上传失败,请更换图片或重新尝试!");
         }else {
-            System.out.println(s);
             userService.updatePicture(id, s);
             return RestResponse.makeOKRsp("修改成功!");
         }
@@ -196,7 +221,7 @@ public class UserController {
 
     @ApiOperation(value = "验证码")
     @GetMapping("/verifyCode")
-    public void verifyCode(HttpSession session, HttpServletResponse response, HttpServletRequest request) {
+    public void verifyCode(HttpSession session, HttpServletResponse response) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             String code = RandomUtil.createRandom(4,Source.numLetter,Source.numLetter.getSources().length());
@@ -209,8 +234,7 @@ public class UserController {
             response.setHeader("Pragma", "no-cache");
             //设置响应头
             response.setHeader("Cache-Control", "no-cache");
-            //防止多次获得的sessionid改变
-            response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+            response.setHeader("Access-Control-Allow-Origin","true");
             //在代理服务器端防止缓冲
             response.setDateHeader("Expires", 0);
             //设置响应内容类型
@@ -224,6 +248,29 @@ public class UserController {
         }
     }
 
+    @ApiOperation("根据传入的身份证图片，识别出文字信息并将其返回")
+    @PostMapping("/idCard")
+    public RestObject<IDCardRo> idCard(MultipartFile file){
+        return RestResponse.makeOKRsp(idCardUtil.idcard(file));
+    }
 
+    @ApiOperation("身份证号码校验")
+    @PostMapping("/authenticate/{id}")
+    public RestObject<String> authenticate(@PathVariable int id,@RequestBody UserVo userVo){
+        boolean b = idCardUtil.idNumberCheck(userVo.getIdNumber());
+        if(b){
+            userVo.setStatus("1");
+            userVo.setCreditScore(50);
+            userService.updateUser(id,userVo);
+            return RestResponse.makeOKRsp("身份验证成功!");
+        }else {
+            return RestResponse.makeErrRsp("认证失败!请仔细查看身份证号是否错误!");
+        }
+    }
 
+    @ApiOperation("查询管理员用户")
+    @GetMapping("/queryAdminUsers")
+    public RestObject<List<UserRo>> queryAdminusers(){
+        return RestResponse.makeOKRsp(userService.queryAdminUser());
+    }
 }

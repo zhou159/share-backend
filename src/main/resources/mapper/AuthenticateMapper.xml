@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.share.mapper.AuthenticateMapper">
+    <select id="findAuthenticateByAdminNickName" resultType="com.share.ro.AuthenticateRo">
+        select * from authenticate where admin_nickname = #{adminName}
+    </select>
+
+    <insert id="addAuthenticate">
+        insert into authenticate (user_id,admin_nickname,authenticate_picture,createtime) values
+            (#{authenticateVo.userId},#{authenticateVo.adminNickname},#{authenticateVo.authenticatePicture},#{authenticateVo.createTime})
+    </insert>
+
+    <update id="updateStatus">
+        update authenticate
+        set  status=#{status}
+        where id=#{id};
+    </update>
+
+</mapper>

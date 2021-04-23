@@ -20,18 +20,12 @@ public class UserService {
 //    @Value("${privateKey}")
 //    private String privateKey;
 
+    //查询所有用户
     public List<UserRo> queryUserAll(){
-        List<User> users = userMapper.queryUserAll();
-        List<UserRo> list = new ArrayList<>();
-        for (User user : users) {
-            UserRo ro = new UserRo();
-//            字段名相同，类型一样，就会自动拷贝
-            BeanUtils.copyProperties(user,ro);
-            list.add(ro);
-        }
-        return list;
+        return userMapper.queryUserAll();
     }
 
+    //按id查询用户
     public UserRo queryUserById(int id){
         return userMapper.queryUserById(id);
     }
@@ -62,12 +56,12 @@ public class UserService {
 
     //按用户名方式注册用户
     public void registerUsername(UserVo vo){
-        userMapper.registerUsername(vo.getUsername(), vo.getPassword());
+        userMapper.registerUsername(vo.getUsername(), vo.getPassword(), vo.getNickname());
     }
 
     //按电话号码方式注册用户
     public void registerTel(UserVo vo){
-        userMapper.registerTel(vo.getTel(), vo.getPassword());
+        userMapper.registerTel(vo.getTel(), vo.getPassword(),vo.getNickname());
     }
 
     //通过电话号、用户名查询用户
@@ -96,5 +90,25 @@ public class UserService {
         user.setId(id);
         user.setPicture(picture);
         userMapper.updateById(user);
+    }
+
+    //通过nickname查询用户
+    public User queryByNickName(String nickname){
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("nickname",nickname);
+        return userMapper.selectOne(wrapper);
+    }
+
+    //查询管理员用户
+    public List<UserRo> queryAdminUser(){
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("roles","a");
+        ArrayList<UserRo> userRos = new ArrayList<>();
+        for (User user : userMapper.selectList(wrapper)) {
+            UserRo ro = new UserRo();
+            BeanUtils.copyProperties(user,ro);
+            userRos.add(ro);
+        }
+        return userRos;
     }
 }

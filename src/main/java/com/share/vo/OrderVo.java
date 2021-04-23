@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @ApiModel("前端传入的订单数据")
 public class OrderVo {
     @ApiModelProperty(value = "订单号")
-    private Long orderNo;
+    private String orderNo;
 
     @ApiModelProperty(value = "订单创建时间")
     private LocalDateTime createTime;

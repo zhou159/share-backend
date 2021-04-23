@@ -41,3 +41,11 @@ minio:
   bucketName: "share"
   configDir: "/usr/local/minio/data/"
 
+
+# 百度官网创建应用后获取
+idcard:
+  url: "https://aip.baidubce.com/rest/2.0/ocr/v1/idcard"
+  clientId: "QpHPdCt5sUkYM5T1X2GGfild"
+  clientSecret: "5w4jgpGl2eXoOf8KaGIrZWLj7Q2Kpyb7"
+
+

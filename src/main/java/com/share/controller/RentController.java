@@ -42,7 +42,7 @@ public class RentController {
 
     //修改出租(id)类型,地址,价格
     @ApiOperation("修改出租信息")
-    @PostMapping("/updateRet/{id}")
+    @PostMapping("/updateRent/{id}")
     public RestObject<String> updateRent(@PathVariable int id,@RequestBody RentVo rentVo){
         rentVo.setUpdateTime(LocalDateTime.now());
         rentService.updateRent(id,rentVo);
@@ -68,7 +68,6 @@ public class RentController {
     @PostMapping("/deletedRent/{id}")
     public RestObject<String> deleteRent(@PathVariable int id,@RequestBody RentVo rentVo){
         rentService.deleteRent(id, rentVo);
-        return RestResponse.makeOKRsp("删除成功!")
-                ;
+        return RestResponse.makeOKRsp("删除成功!");
     }
 }

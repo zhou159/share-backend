@@ -27,7 +27,7 @@ public class Order implements Serializable {
 
     @ApiModelProperty(value = "订单号")
     @TableField("order_no")
-    private Long orderNo;
+    private String orderNo;
 
     @ApiModelProperty(value = "订单创建时间")
     @TableField("createtime")

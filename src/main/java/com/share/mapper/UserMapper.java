@@ -14,7 +14,7 @@ import java.util.List;
 public interface UserMapper extends BaseMapper<User> {
 
     //查询全部用户
-    List<User> queryUserAll();
+    List<UserRo> queryUserAll();
 
     //查询用户id
     UserRo queryUserById(@Param("id")Integer id);
@@ -29,10 +29,10 @@ public interface UserMapper extends BaseMapper<User> {
     User queryByTel(@Param("tel") String tel, @Param("password") String password);
 
     //注册:用户名(增加)
-    int registerUsername(@Param("username") String username, @Param("password") String password);
+    int registerUsername(@Param("username") String username, @Param("password") String password,@Param("nickname")String nickname);
 
     //注册:电话号(增加)
-    int registerTel(@Param("tel") String tel, @Param("password") String password);
+    int registerTel(@Param("tel") String tel, @Param("password") String password,@Param("nickname")String nickname);
 
     //修改密码
     int updateTP(@Param("id")Integer id,@Param("UserVo")UserVo userVo);

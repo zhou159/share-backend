@@ -23,6 +23,10 @@
     </select>
 
     <select id="queryArticleById" resultType="com.share.ro.ArticleRo">
+        select * from share.article where user_id=#{userId}
+    </select>
+
+    <select id="queryArticleByUserId" resultType="com.share.ro.ArticleRo">
         select * from share.article where id=#{id}
     </select>
 </mapper>

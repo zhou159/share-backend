@@ -1,5 +1,6 @@
 package com.share.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -9,6 +10,12 @@ import lombok.Data;
 public class UserVo {
     @ApiModelProperty("用户id")
     private int id;
+
+    @ApiModelProperty("用户身份证号")
+    private String idNumber;
+
+    @ApiModelProperty("用户真实姓名")
+    private String trueName;
 
     @ApiModelProperty("用户姓名")
     private String username;
@@ -33,5 +40,11 @@ public class UserVo {
 
     @ApiModelProperty("验证码")
     private String checkCode;//验证码
+
+    @ApiModelProperty("用户状态")
+    private String status;
+
+    @ApiModelProperty(value = "用户信誉值")
+    private Integer creditScore;
 
 }

@@ -21,7 +21,7 @@ public class OrderService {
         return orderMapper.queryOrderById(id);
     }
 
-    public OrderRo queryOrderByOrederNo(Long orderNo){
+    public OrderRo queryOrderByOrederNo(String orderNo){
         return orderMapper.queryOrderByOrderNo(orderNo);
     }
 

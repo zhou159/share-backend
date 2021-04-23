@@ -37,11 +37,11 @@ public class OrderController {
     @ApiOperation("新增订单")
     @PostMapping("/addOrder")
     public RestObject<String> addOrder(@RequestBody OrderVo orderVo){
-        Long orderNo = Long.valueOf(RandomUtil.createRandom(19, Source.num, Source.num.getSources().length()));
+        String orderNo = RandomUtil.createRandom(19, Source.num, Source.num.getSources().length());
         OrderRo order = orderService.queryOrderByOrederNo(orderNo);
         if (order!=null){
             while(order!=null){
-                orderNo = Long.valueOf(RandomUtil.createRandom(19, Source.num, Source.num.getSources().length()));
+                orderNo = RandomUtil.createRandom(19, Source.num, Source.num.getSources().length());
                 order = orderService.queryOrderByOrederNo(orderNo);
             }
         }

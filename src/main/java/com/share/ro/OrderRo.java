@@ -14,7 +14,7 @@ public class OrderRo {
     private Integer id;
 
     @ApiModelProperty(value = "订单号")
-    private Long orderNo;
+    private String orderNo;
 
     @ApiModelProperty(value = "订单创建时间")
     private LocalDateTime createTime;

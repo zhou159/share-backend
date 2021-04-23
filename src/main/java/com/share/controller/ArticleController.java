@@ -50,9 +50,15 @@ public class ArticleController {
         return RestResponse.makeOKRsp(articleService.queryAllArticle());
     }
 
+    @ApiOperation("按用户id查询信息")
+    @GetMapping("/queryArticleByUserId/{userId}")
+    public RestObject<List<ArticleRo>> queryArticleByUserId(@PathVariable int userId){
+        return RestResponse.makeOKRsp(articleService.queryArticleByUserId(userId));
+    }
+
     @ApiOperation("按id查询信息")
-    @GetMapping("/queryArticleById/{id}")
-    public RestObject<List<ArticleRo>> queryArticleById(@PathVariable int id){
+    @GetMapping("/queryArticleByrId/{id}")
+    public RestObject<ArticleRo> queryArticleById(@PathVariable int id){
         return RestResponse.makeOKRsp(articleService.queryArticleById(id));
     }
 

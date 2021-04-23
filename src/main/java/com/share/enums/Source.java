@@ -9,7 +9,8 @@ import lombok.Getter;
 public enum Source {
     num("1234567890"),
     numLetter("23456789ABCDEFGHJKLMNPQRSTUVWXYZ"),
-    Letter("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    letter("ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
+    symbolNumLetter("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_*/+-!@#$%^&*()-=~");
 
     public String sources;
 

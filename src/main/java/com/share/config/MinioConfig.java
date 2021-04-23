@@ -20,6 +20,7 @@ public class MinioConfig {
     @Value("${minio.endpoint}")
     private String endpoint;
 
+    @ApiModelProperty("端口")
     @Value("${minio.port}")
     private int port;
 

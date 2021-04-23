@@ -3,16 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.share.mapper.UserMapper">
-    <resultMap id="userList" type="com.share.entity.User">
-        <result column="picture" property="picture"/>
-        <result column="nickname" property="nickname" />
-        <result column="useraccount" property="useraccount" />
-        <result column="address" property="address" />
-        <result column="tel" property="tel" />
-        <result column="gender" property="gender" />
-    </resultMap>
-    <select id="queryUserAll" resultMap="userList">
-        select picture,nickname,useraccount,address,tel,gender from share.user
+    <select id="queryUserAll" resultType="com.share.ro.UserRo">
+        select * from share.user
     </select>
 
     <select id="queryUserById" resultType="com.share.ro.UserRo" >
@@ -31,12 +23,12 @@
 
     <!--    账号注册方式-->
     <insert id="registerUsername" parameterType="com.share.entity.User">
-        insert into share.user (useraccount,password) values (#{username},#{password})
+        insert into share.user (useraccount,password,nickname) values (#{username},#{password},#{nickname})
     </insert>
 
     <!--    手机号注册方式-->
     <insert id="registerTel" parameterType="com.share.entity.User">
-        insert into share.user (tel,password) values (#{tel},#{password})
+        insert into share.user (tel,password,nickname) values (#{tel},#{password},#{nickname})
     </insert>
 
     <select id="queryUserByTA" resultType="com.share.entity.User">

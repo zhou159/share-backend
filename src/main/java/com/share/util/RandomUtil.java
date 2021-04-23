@@ -28,7 +28,7 @@ public class RandomUtil {
         BufferedImage bi = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
         Graphics g = bi.getGraphics();
         setBackground(g);
-        setBorder(g);
+        //setBorder(g);
         g.setFont(new Font("宋体",Font.BOLD,20));
         g.setColor(Color.blue);//设置字体颜色
         g.drawString(checkCode,10,20);//将生成的随机字符串写在图片上

@@ -18,7 +18,7 @@ public interface   OrderMapper extends BaseMapper<Order> {
     OrderRo queryOrderById(@Param("id")int id);
 
     //查询订单(订单编号)
-    OrderRo queryOrderByOrderNo(@Param("orderNo")Long orderNo);
+    OrderRo queryOrderByOrderNo(@Param("orderNo")String orderNo);
 
     //创建订单
     int addOrder(@Param("orderVo")OrderVo orderVo);

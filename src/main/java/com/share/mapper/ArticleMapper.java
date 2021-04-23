@@ -25,6 +25,9 @@ public interface ArticleMapper extends BaseMapper<Article> {
     List<ArticleRo> queryAllArticle();
 
     //按用户id查询消息
-    List<ArticleRo> queryArticleById(@Param("id")int id);
+    List<ArticleRo> queryArticleByUserId(@Param("userId")int userId);
+
+    //按id查询信息
+    ArticleRo queryArticleById(@Param("id")int id);
 
 }

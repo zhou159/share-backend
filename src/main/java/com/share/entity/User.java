@@ -34,9 +34,9 @@ public class User implements Serializable {
 
     @ApiModelProperty(value = "用户真实姓名")
     @TableField("truename")
-    private String truename;
+    private String trueName;
 
-    @ApiModelProperty(value = "用户昵称")
+    @ApiModelProperty(value = "用户昵称（16位长）")
     @TableField("nickname")
     private String nickname;
 
@@ -64,13 +64,17 @@ public class User implements Serializable {
     @TableField("roles")
     private String roles;
 
-    @ApiModelProperty(value = "用户是否认证（0：未认证，1：已认证）")
+    @ApiModelProperty(value = "用户是否认证（0：未认证，1：已认证，2：已小区认证）")
     @TableField("status")
     private String status;
 
     @ApiModelProperty(value = "用户头像")
     @TableField("picture")
     private String picture;
+
+    @ApiModelProperty(value = "用户信誉值")
+    @TableField("credit_score")
+    private Integer creditScore;
 
 
 }
