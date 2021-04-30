@@ -5,7 +5,7 @@ spring:
   datasource:
     username: root
     password: 123456
-    url: jdbc:mysql://localhost:3306/share?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2b8
+    url: jdbc:mysql://localhost:3306/share?allowMultiQueries=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2b8&rewriteBatchedStatements=true
     driver-class-name: com.mysql.cj.jdbc.Driver
   servlet:
     multipart:
@@ -14,7 +14,7 @@ spring:
   redis:
     host: 39.97.220.152
     port: 6379
-    password: 123456
+    password: * * * * * * * *
 
 #返回值,参数类型别名
 #mapper存放位置：resources目录下mapper目录
@@ -35,8 +35,8 @@ logging:
 minio:
   endpoint: 39.97.220.152
   port: 9000
-  accessKey: minioadmin
-  secretKey: minioadmin
+  accessKey: * * * * * *
+  secretKey: * * * * * *
   secure: false #如果是true，则用的是https而不是http,默认值是true
   bucketName: "share"
   configDir: "/usr/local/minio/data/"
@@ -45,7 +45,7 @@ minio:
 # 百度官网创建应用后获取
 idcard:
   url: "https://aip.baidubce.com/rest/2.0/ocr/v1/idcard"
-  clientId: "QpHPdCt5sUkYM5T1X2GGfild"
-  clientSecret: "5w4jgpGl2eXoOf8KaGIrZWLj7Q2Kpyb7"
+  clientId: * * * * * *
+  clientSecret: * * * * * *
 
 
