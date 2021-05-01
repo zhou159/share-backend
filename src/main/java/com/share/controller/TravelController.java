@@ -2,7 +2,7 @@ package com.share.controller;
 
 import com.share.result.RestObject;
 import com.share.result.RestResponse;
-import com.share.ro.TravelRo;
+import com.share.ro.travelRo.TravelRo;
 import com.share.service.TravelService;
 import com.share.vo.TravelVo;
 import io.swagger.annotations.Api;
@@ -30,6 +30,12 @@ public class TravelController {
     @GetMapping("/queryTravelByUserId/{userId}")
     public RestObject<List<TravelRo>> queryTravelByUserId(@PathVariable int userId){
         return RestResponse.makeOKRsp(travelService.queryTravelByUserId(userId));
+    }
+
+    @ApiOperation("按id查询出行")
+    @GetMapping("/queryTravelById/{id}")
+    public RestObject<TravelRo> queryTravelById(@PathVariable int id){
+        return RestResponse.makeOKRsp(travelService.queryTravelById(id));
     }
 
     @ApiOperation("添加出行")

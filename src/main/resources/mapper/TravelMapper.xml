@@ -4,11 +4,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.share.mapper.TravelMapper">
 
-    <select id="queryAllTravel" resultType="com.share.ro.TravelRo">
-        select * from share.travel
+    <select id="queryAllTravel" resultType="com.share.ro.travelRo.TravelRo">
+        select * from share.travel where deleted = '0' and status = '0'
     </select>
 
-    <select id="queryTravelByUserId" resultType="com.share.ro.TravelRo">
+    <select id="queryTravelByUserId" resultType="com.share.ro.travelRo.TravelRo">
         select * from share.travel where user_id=#{userId}
     </select>
 

@@ -2,7 +2,8 @@ package com.share.controller;
 
 import com.share.result.RestObject;
 import com.share.result.RestResponse;
-import com.share.ro.ArticleRo;
+import com.share.ro.articleRo.AllEArticleRo;
+import com.share.ro.articleRo.ArticleRo;
 import com.share.service.ArticleService;
 import com.share.vo.ArticleVo;
 import io.swagger.annotations.Api;
@@ -43,9 +44,9 @@ public class ArticleController {
         return RestResponse.makeOKRsp("删除成功");
     }
 
-    @ApiOperation("查询全部信息")
-    @GetMapping("/queryAllArticle")
-    public RestObject<List<ArticleRo>> queryAllArticle(){
+    @ApiOperation("查询所有有效信息")
+    @GetMapping("/queryAllEArticle")
+    public RestObject<List<AllEArticleRo>> queryAllArticle(){
         //articleService.queryAllArticle();
         return RestResponse.makeOKRsp(articleService.queryAllArticle());
     }
@@ -57,7 +58,7 @@ public class ArticleController {
     }
 
     @ApiOperation("按id查询信息")
-    @GetMapping("/queryArticleByrId/{id}")
+    @GetMapping("/queryArticleById/{id}")
     public RestObject<ArticleRo> queryArticleById(@PathVariable int id){
         return RestResponse.makeOKRsp(articleService.queryArticleById(id));
     }

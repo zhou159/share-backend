@@ -2,26 +2,83 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.share.mapper.CommentsMapper">
 
-    <insert id="addComments" parameterType="com.share.entity.Comments">
-        insert into share.comments (user_id_commentator,user_id_assessee,travel_id,article_id,createTime,text,replay) values (#{commentsVo.userIdCommentator},#{commentsVo.userIdAssessee},#{commentsVo.travelId},#{commentsVo.articleId},#{commentsVo.createTime},#{commentsVo.text},#{commentsVo.replay})
+    <insert id="addComments">
+        insert into share.comments
+            <choose>
+                <when test="commentsVo.userIdAssessee != null">
+                    (user_id_commentator,user_id_assessee,createtime,text,type)
+                    values (#{commentsVo.userIdCommentator},#{commentsVo.userIdAssessee},
+                            #{commentsVo.createTime},#{commentsVo.text},'人物')
+                </when>
+                <when test="commentsVo.travelId != null">
+                    (user_id_commentator,travel_id,createtime,text,type)
+                    values (#{commentsVo.userIdCommentator},#{commentsVo.travelId},
+                    #{commentsVo.createTime},#{commentsVo.text},'出行')
+                </when>
+                <when test="commentsVo.articleId != null">
+                    (user_id_commentator,article_id,createtime,text,type)
+                    values (#{commentsVo.userIdCommentator},#{commentsVo.articleId},
+                    #{commentsVo.createTime},#{commentsVo.text},'信息')
+                </when>
+            </choose>
     </insert>
 
     <delete id="deleteComments">
         delete from share.comments where id=#{id}
     </delete>
 
-    <select id="queryCommentsById" resultType="com.share.ro.CommentsRo">
-        select * from share.comments
-        <choose>
-            <when test="commentsVo.articleId != null">
-                where article_id=#{commentsVo.articleId};
-            </when>
-            <when test="commentsVo.travelId != null">
-                where article_id=#{commentsVo.travelId};
-            </when>
-            <otherwise>
-                where user_id_assessee=#{commentsVo.userIdAssessee}
-            </otherwise>
-        </choose>
+    <resultMap id="userId" type="com.share.ro.commentsRo.UserCommentsRo">
+        <result property="id" column="cid"/>
+        <result property="userIdCommentator" column="cuidc"/>
+        <result property="userIdAssessee" column="cuida"/>
+        <result property="createTime" column="cct"/>
+        <result property="text" column="ctxt"/>
+        <result property="picture" column="upic"/>
+        <result property="nickname" column="unn"/>
+    </resultMap>
+
+    <select id="queryCommentsByUserId" resultMap="userId">
+        select c.id cid,c.user_id_commentator cuidc,c.user_id_assessee cuida,c.createtime cct,c.text ctxt,
+               u.id uid,u.picture upic,u.nickname unn
+        from share.comments c,share.user u
+        where c.user_id_commentator = u.id and c.user_id_assessee = #{userId} and type = '人物'
+    </select>
+
+    <resultMap id="travelId" type="com.share.ro.commentsRo.TravelCommentsRo">
+        <result property="id" column="cid"/>
+        <result property="userIdCommentator" column="cuidc"/>
+        <result property="travelId" column="ctid"/>
+        <result property="createTime" column="cct"/>
+        <result property="text" column="ctxt"/>
+        <result property="picture" column="upic"/>
+        <result property="nickname" column="unn"/>
+    </resultMap>
+
+    <select id="queryCommentsByTravelId" resultMap="travelId">
+        select c.id cid,c.user_id_commentator cuidc,c.travel_id ctid,c.createtime cct,c.text ctxt,
+               u.id uid,u.picture upic,u.nickname unn
+        from share.comments c,share.user u
+        where c.user_id_commentator = u.id and c.travel_id = #{travelId} and type = '出行'
+    </select>
+
+    <resultMap id="articleId" type="com.share.ro.commentsRo.ArticleCommentsRo">
+        <result property="id" column="cid"/>
+        <result property="userIdCommentator" column="cuidc"/>
+        <result property="articleId" column="caid"/>
+        <result property="createTime" column="cct"/>
+        <result property="text" column="ctxt"/>
+        <result property="picture" column="upic"/>
+        <result property="nickname" column="unn"/>
+    </resultMap>
+
+    <select id="queryCommentsByArticleId" resultMap="articleId">
+        select c.id cid,c.user_id_commentator cuidc,c.article_id caid,c.createtime cct,c.text ctxt,
+               u.id uid,u.picture upic,u.nickname unn
+        from share.comments c,share.user u
+        where c.user_id_commentator = u.id and c.article_id = #{articleId} and type = '信息'
+    </select>
+
+    <select id="queryCommentsById" resultType="com.share.entity.Comments">
+        select * from share.comments where id = #{id}
     </select>
 </mapper>

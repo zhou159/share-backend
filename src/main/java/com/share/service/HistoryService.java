@@ -1,7 +1,10 @@
 package com.share.service;
 
 import com.share.mapper.HistoryMapper;
-import com.share.ro.HistoryRo;
+import com.share.ro.historyRo.GoodsHistoryRo;
+import com.share.ro.historyRo.HistoryRo;
+import com.share.ro.historyRo.RentHsitoryRo;
+import com.share.ro.historyRo.TravelHistoryRo;
 import com.share.vo.HistoryVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,17 +17,34 @@ public class HistoryService {
     HistoryMapper historyMapper;
 
     public int addHistory(HistoryVo historyVo){
-        historyMapper.addHistory(historyVo);
-        return 0;
+        int i = historyMapper.addHistory(historyVo);
+        if (i>0){
+            return 0;
+        }else {
+            return -1;
+        }
+
     }
 
     public int deleteHistory(int id){
-        historyMapper.deleteHistory(id);
-        return 0;
+        int i = historyMapper.deleteHistory(id);
+        if (i>0){
+            return 0;
+        }else {
+            return -1;
+        }
     }
 
-    public List<HistoryRo> queryHistoryByUserId(int userId){
-        return historyMapper.queryHistoryByUserId(userId);
+    public List<GoodsHistoryRo> queryGoodsHistoryByUserId(int userId){
+        return historyMapper.queryGoodsHistoryByUserId(userId);
+    }
+
+    public List<RentHsitoryRo> queryRentHistoryByUserId(int userId){
+        return historyMapper.queryRentHistoryByUserId(userId);
+    }
+
+    public List<TravelHistoryRo> queryTravelHistoryByUserId(int userId){
+        return historyMapper.queryTravelHistoryByUserId(userId);
     }
 
     public HistoryRo queryHistoryByObjId(HistoryVo historyVo){
@@ -32,7 +52,12 @@ public class HistoryService {
     }
 
     public int updateHistory(HistoryVo historyVo){
-        return historyMapper.updateHistory(historyVo);
+        int i = historyMapper.updateHistory(historyVo);
+        if (i>0){
+            return 0;
+        }else {
+            return -1;
+        }
     }
 
 }

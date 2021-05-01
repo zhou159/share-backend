@@ -12,11 +12,28 @@
         delete from share.collect where id=#{id}
     </delete>
 
-    <select id="queryCollectByUserId" resultType="com.share.ro.CollectRo">
-        select * from share.collect where user_id=#{userId}
+    <resultMap id="collect" type="com.share.ro.collectRo.CollectRo">
+        <result property="id" column="cid"/>
+<!--        <result property="userId" column="cuid"/>-->
+        <result property="goodsId" column="cgid"/>
+        <result property="createTime" column="cct"/>
+        <result property="goodsName" column="ggn"/>
+        <result property="picture" column="gpc"/>
+        <result property="price" column="gp"/>
+    </resultMap>
+
+    <select id="queryCollectByUserId" resultMap="collect" resultType="com.share.ro.collectRo.CollectRo">
+        select c.id cid,c.goods_id cgid,c.createtime cct,
+               g.goodsname ggn,g.price gp,g.picture gpc
+        from share.collect c,share.goods g
+        where c.goods_id = g.id and c.user_id=#{userId}
     </select>
 
-    <select id="queryCollectById" resultType="com.share.ro.CollectRo">
+    <select id="queryCollectById" resultType="com.share.ro.collectRo.CollectRo">
         select * from share.collect where id=#{id}
+    </select>
+
+    <select id="isExist" resultType="com.share.entity.Collect">
+        select * from share.collect where user_id = #{collectVo.userId} and goods_id = #{collectVo.goodsId}
     </select>
 </mapper>

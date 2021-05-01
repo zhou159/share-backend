@@ -33,6 +33,10 @@ public class Article implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
+    @ApiModelProperty(value = "信息title")
+    @TableField("title")
+    private String title;
+
     @ApiModelProperty(value = "用户id")
     @TableField("user_id")
     private Integer userId;

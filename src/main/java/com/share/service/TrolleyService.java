@@ -1,21 +1,51 @@
 package com.share.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.share.entity.Goods;
+import com.share.entity.User;
+import com.share.mapper.GoodsMapper;
 import com.share.mapper.TrolleyMapper;
-import com.share.ro.TrolleyRo;
+import com.share.mapper.UserMapper;
+import com.share.ro.travelRo.TravelRo;
+import com.share.ro.trolleyRo.TrolleyRo;
 import com.share.vo.TrolleyVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class TrolleyService {
     @Autowired
     TrolleyMapper trolleyMapper;
 
+    @Autowired
+    private GoodsMapper goodsMapper;
+
     //查询购物车(用户id)
     public List<TrolleyRo> queryTrolleyByUserId(int userId) {
-        return trolleyMapper.queryTrolleyByUserId(userId);
+        List<TrolleyRo> trolleyRos = trolleyMapper.queryTrolleyByUserId(userId);
+        List<Goods> goods = goodsMapper.selectList(
+                new QueryWrapper<Goods>().in(trolleyRos != null && !trolleyRos.isEmpty(), "id",
+                        trolleyRos.stream()
+                                .map(TrolleyRo::getGoodsId)
+                                .distinct()
+                                .collect(Collectors.toList())));
+
+        Map<Integer, Goods> map = goods.stream().collect(Collectors.toMap(Goods::getId, Function.identity()));
+        trolleyRos.stream().forEach(it -> {
+            if (map.containsKey(it.getGoodsId())) {
+                it.setGoodsName(map.get(it.getGoodsId()).getGoodsName());
+                it.setPicture(map.get(it.getGoodsId()).getPicture());
+                it.setGoodsPrice(map.get(it.getGoodsId()).getPrice());
+                it.setStock(map.get(it.getGoodsId()).getStock());
+            }
+        });
+
+        return trolleyRos;
     }
 
     //加入购物车

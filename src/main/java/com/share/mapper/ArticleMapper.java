@@ -2,7 +2,8 @@ package com.share.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.share.entity.Article;
-import com.share.ro.ArticleRo;
+import com.share.ro.articleRo.AllEArticleRo;
+import com.share.ro.articleRo.ArticleRo;
 import com.share.vo.ArticleVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -22,7 +23,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
     int deleteArticle(@Param("articleId")int id);
 
     //查询全部消息
-    List<ArticleRo> queryAllArticle();
+    List<AllEArticleRo> queryAllArticle();
 
     //按用户id查询消息
     List<ArticleRo> queryArticleByUserId(@Param("userId")int userId);

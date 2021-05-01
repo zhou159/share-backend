@@ -58,17 +58,16 @@ public class FileUtil {
                 bos.write(buffer, 0, len);
             }
 
+            byte[] var = bos.toByteArray();
 
-            byte[] var7 = bos.toByteArray();
-
-            return var7;
+            return var;
         } finally {
             try {
                 if (in != null) {
                     in.close();
                 }
-            } catch (IOException var14) {
-                var14.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             if (file.exists()){
                 file.delete();

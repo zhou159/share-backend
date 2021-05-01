@@ -17,16 +17,46 @@
         delete from share.article where id=#{articleId}
     </delete>
 
+    <resultMap id="Article" type="com.share.ro.articleRo.AllEArticleRo">
+        <result property="id" column="aid"/>
+        <result property="title" column="atitle"/>
+        <result property="text" column="atext"/>
+        <result property="createTime" column="acreatetime"/>
+        <result property="updateTime" column="aupdateTime"/>
+        <result property="userId" column="uid"/>
+        <result property="picture" column="upicture"/>
+        <result property="nickname" column="unickname"/>
+    </resultMap>
 
-    <select id="queryAllArticle" resultType="com.share.ro.ArticleRo">
-        select * from share.article
+    <select id="queryAllArticle" resultMap="Article" resultType="List">
+        select a.id aid,a.title atitle,a.text atext,a.createtime acreatetime,a.updatetime aupdatetime,u.id uid,u.picture upicture,u.nickname unickname
+        from share.user u,share.article a
+        where  u.id = a.user_id and a.status = '1'
     </select>
 
-    <select id="queryArticleById" resultType="com.share.ro.ArticleRo">
-        select * from share.article where user_id=#{userId}
+    <resultMap id="Article2" type="com.share.ro.articleRo.ArticleRo">
+        <result property="id" column="aid"/>
+        <result property="title" column="atitle"/>
+        <result property="text" column="atext"/>
+        <result property="createTime" column="acreatetime"/>
+        <result property="updateTime" column="aupdateTime"/>
+        <result property="userId" column="uid"/>
+        <result property="picture" column="upicture"/>
+        <result property="nickname" column="unickname"/>
+        <result property="status" column="astatus"/>
+    </resultMap>
+
+    <select id="queryArticleById" resultMap="Article2">
+        select a.id aid,a.title atitle,a.text atext,a.createtime acreatetime,a.updatetime aupdatetime,a.status astatus
+               u.id uid,u.picture upicture,u.nickname unickname
+        from share.user u,share.article a
+        where  u.id = a.user_id and id=#{id}
     </select>
 
-    <select id="queryArticleByUserId" resultType="com.share.ro.ArticleRo">
-        select * from share.article where id=#{id}
+    <select id="queryArticleByUserId" resultMap="Article2" resultType="List">
+        select a.id aid,a.title atitle,a.text atext,a.createtime acreatetime,a.updatetime aupdatetime,a.status astatus,
+               u.id uid,u.picture upicture,u.nickname unickname
+        from share.user u,share.article a
+        where  u.id = a.user_id and user_id = #{userId}
     </select>
 </mapper>

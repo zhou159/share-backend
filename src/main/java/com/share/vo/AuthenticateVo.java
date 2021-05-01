@@ -18,8 +18,11 @@ public class AuthenticateVo {
     @ApiModelProperty(value = "审核用户id")
     private Integer userId;
 
+    @ApiModelProperty(value = "是否通过")
+    private boolean success;
+
     @ApiModelProperty(value = "管理员nickname")
-    private String adminNickname;
+    private Integer adminUid;
 
     @ApiModelProperty(value = "审核图片")
     private String authenticatePicture;

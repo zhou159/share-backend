@@ -5,7 +5,7 @@ import com.share.entity.User;
 import com.share.result.RestObject;
 import com.share.result.RestResponse;
 import com.share.ro.IDCardRo;
-import com.share.ro.UserRo;
+import com.share.ro.userRo.UserRo;
 import com.share.service.UserService;
 import com.share.util.IDCardUtil;
 import com.share.util.MinioUtil;
@@ -116,11 +116,11 @@ public class UserController {
                 if (user != null){
                     throw new ShareException("用户名已被注册!");
                 }else {
-                    String nickName = RandomUtil.createRandom(16,Source.symbolNumLetter,Source.symbolNumLetter.getSources().length());
+                    String nickName = RandomUtil.createRandom(10,Source.symbolNumLetter,Source.symbolNumLetter.getSources().length());
                     User user1 = userService.queryByNickName(nickName);
                     if (user1!=null){
                         while (user1!=null){
-                            nickName = RandomUtil.createRandom(16,Source.symbolNumLetter,Source.symbolNumLetter.getSources().length());
+                            nickName = RandomUtil.createRandom(10,Source.symbolNumLetter,Source.symbolNumLetter.getSources().length());
                             user1 = userService.queryByNickName(nickName);
                         }
                     }
@@ -147,11 +147,11 @@ public class UserController {
                 if (user != null){
                     throw new ShareException("该电话号码已注册!");
                 }else {
-                    String nickName = RandomUtil.createRandom(16,Source.symbolNumLetter,Source.symbolNumLetter.getSources().length());
+                    String nickName = RandomUtil.createRandom(10,Source.symbolNumLetter,Source.symbolNumLetter.getSources().length());
                     User user1 = userService.queryByNickName(nickName);
                     if (user1!=null){
                         while (user1!=null){
-                            nickName = RandomUtil.createRandom(16,Source.symbolNumLetter,Source.symbolNumLetter.getSources().length());
+                            nickName = RandomUtil.createRandom(10,Source.symbolNumLetter,Source.symbolNumLetter.getSources().length());
                             user1 = userService.queryByNickName(nickName);
                         }
                     }
@@ -216,7 +216,6 @@ public class UserController {
                 throw new ShareException("验证码不正确!请重新输入");
             }
         }
-
     }
 
     @ApiOperation(value = "验证码")
@@ -272,5 +271,13 @@ public class UserController {
     @GetMapping("/queryAdminUsers")
     public RestObject<List<UserRo>> queryAdminusers(){
         return RestResponse.makeOKRsp(userService.queryAdminUser());
+    }
+
+
+    @ApiOperation("测试Redis用")
+    @PostMapping("/redis")
+    public RestObject<List> redis(){
+        List zx = redisUtil.lrangeAll("zx");
+        return RestResponse.makeOKRsp(zx);
     }
 }

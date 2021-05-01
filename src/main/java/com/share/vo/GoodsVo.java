@@ -24,9 +24,6 @@ public class GoodsVo {
     @ApiModelProperty("交易物品上架时间,前端不用传入")
     private LocalDateTime createTime;
 
-    @ApiModelProperty("用户id")
-    private Integer userId;
-
     @ApiModelProperty("交易物品库存")
     private Integer stock;
 

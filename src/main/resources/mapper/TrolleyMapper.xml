@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.share.mapper.TrolleyMapper">
 
-    <select id="queryTrolleyByUserId" resultType="com.share.ro.TrolleyRo">
+    <select id="queryTrolleyByUserId" resultType="com.share.ro.trolleyRo.TrolleyRo">
         select * from share.trolley where user_id=#{userId}
     </select>
 

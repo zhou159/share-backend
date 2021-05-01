@@ -12,6 +12,9 @@ public class ArticleVo {
     @ApiModelProperty("信息id")
     private Integer id;
 
+    @ApiModelProperty("信息标题")
+    private String title;
+
     @ApiModelProperty("用户id")
     private Integer userId;
 

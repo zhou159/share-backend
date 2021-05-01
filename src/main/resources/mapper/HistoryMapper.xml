@@ -8,20 +8,16 @@
         insert into share.history
         <choose>
             <when test="historyVo.goodsId != null">
-                (user_id,goods_id,lasttime)
-                values (#{historyVo.userId},#{historyVo.goodsId},#{historyVo.lastTime})
-            </when>
-            <when test="historyVo.helpId != null">
-                (user_id,help_id,lasttime)
-                values (#{historyVo.userId},#{historyVo.helpId},#{historyVo.lastTime})
+                (user_id,goods_id,lasttime,type)
+                values (#{historyVo.userId},#{historyVo.goodsId},#{historyVo.lastTime},'交易物品')
             </when>
             <when test="historyVo.rentId != null">
-                (user_id,rent_id,lasttime)
-                values (#{historyVo.userId},#{historyVo.rentId},#{historyVo.lastTime})
+                (user_id,rent_id,lasttime,type)
+                values (#{historyVo.userId},#{historyVo.rentId},#{historyVo.lastTime},'出租')
             </when>
             <when test="historyVo.travelId != null">
-                (user_id,travel_id,lasttime)
-                values (#{historyVo.userId},#{historyVo.travelId},#{historyVo.lastTime})
+                (user_id,travel_id,lasttime,type)
+                values (#{historyVo.userId},#{historyVo.travelId},#{historyVo.lastTime},'出行')
             </when>
         </choose>
     </insert>
@@ -30,24 +26,59 @@
         delete from share.history where id=#{id}
     </delete>
 
-    <select id="queryHistoryByUserId" resultType="com.share.ro.HistoryRo">
-        select * from share.history where user_id=#{userId}
+    <resultMap id="goodsHistory" type="com.share.ro.historyRo.GoodsHistoryRo">
+        <result property="id" column="hid"/>
+        <result property="userId" column="huid"/>
+        <result property="goodsId" column="hgids"/>
+        <result property="lastTime" column="hlt"/>
+        <result property="goodsName" column="ggn"/>
+    </resultMap>
+
+    <select id="queryGoodsHistoryByUserId" resultMap="goodsHistory" resultType="com.share.ro.historyRo.GoodsHistoryRo">
+        select h.id hid,h.goods_id hgids,h.user_id huid,h.lasttime hlt,g.goodsname ggn
+        from share.history h,share.goods g
+        where h.goods_id = g.id and h.type = '交易物品' and h.user_id = #{userId}
     </select>
 
-    <select id="queryHistoryByObjId" resultType="com.share.ro.HistoryRo">
+    <resultMap id="rentHistory" type="com.share.ro.historyRo.RentHsitoryRo">
+        <result property="id" column="hid"/>
+        <result property="userId" column="huid"/>
+        <result property="rentId" column="hrid"/>
+        <result property="lastTime" column="hlt"/>
+        <result property="address" column="ra"/>
+    </resultMap>
+
+    <select id="queryRentHistoryByUserId" resultMap="rentHistory">
+        select h.id hid,h.rent_id hrid,h.user_id huid,h.lasttime hlt,r.address ra
+        from share.history h,share.rent r
+        where h.rent_id = r.id and h.type = '出租' and h.user_id = #{userId}
+    </select>
+
+    <resultMap id="travelHistory" type="com.share.ro.historyRo.TravelHistoryRo">
+        <result property="id" column="hid"/>
+        <result property="userId" column="huid"/>
+        <result property="travelId" column="htid"/>
+        <result property="lastTime" column="hlt"/>
+        <result property="title" column="tt"/>
+    </resultMap>
+
+    <select id="queryTravelHistoryByUserId" resultMap="travelHistory">
+        select h.id hid,h.travel_id htid,h.user_id huid,h.lasttime hlt,t.title tt
+        from share.history h,share.travel t
+        where h.travel_id = t.id and h.type = '出行' and h.user_id = #{userId}
+    </select>
+
+    <select id="queryHistoryByObjId" resultType="com.share.ro.historyRo.HistoryRo">
         select * from share.history
         <where>
             <if test="historyVo.goodsId != null">
-                goods_id=#{historyVo.goodsId}
-            </if>
-            <if test="historyVo.helpId != null">
-                help_id=#{historyVo.helpId}
+                goods_id=#{historyVo.goodsId} and user_id =#{historyVo.userId}
             </if>
             <if test="historyVo.rentId != null">
-                rent_id=#{historyVo.rentId}
+                rent_id=#{historyVo.rentId} and user_id =#{historyVo.userId}
             </if>
             <if test="historyVo.travelId != null">
-                travel_id=#{historyVo.travelId}
+                travel_id=#{historyVo.travelId} and user_id =#{historyVo.userId}
             </if>
         </where>
     </select>
@@ -58,9 +89,6 @@
         <where>
             <if test="historyVo.goodsId != null">
                 goods_id=#{historyVo.goodsId}
-            </if>
-            <if test="historyVo.helpId != null">
-                help_id=#{historyVo.helpId}
             </if>
             <if test="historyVo.rentId != null">
                 rent_id=#{historyVo.rentId}

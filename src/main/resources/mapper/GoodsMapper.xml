@@ -4,27 +4,61 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.share.mapper.GoodsMapper">
 
-    <select id="queryAllGoods" resultType="com.share.ro.GoodsRo">
-        select * from share.goods
+    <resultMap id="goods" type="com.share.ro.goodsRo.GoodsAllRo">
+        <result property="id" column="gid"/>
+        <result property="userId" column="guid"/>
+        <result property="goodsName" column="ggn"/>
+        <result property="details" column="gd"/>
+        <result property="price" column="gp"/>
+        <result property="gpicture" column="gpic"/>
+        <result property="createTime" column="gct"/>
+        <result property="upicture" column="upic"/>
+        <result property="nickname" column="unn"/>
+        <result property="stock" column="gs"/>
+    </resultMap>
+
+    <select id="queryAllGoods" resultMap="goods">
+        select g.id gid,g.user_id guid,g.goodsname ggn,g.details gd,g.price gp,g.createtime gct,g.stock gs,g.picture gpic,
+               u.id uid,u.picture upic,u.nickname unn
+        from share.goods g,share.user u
+        where g.user_id = u.id and g.status = '0'
+        ORDER BY g.createtime DESC
     </select>
 
-    <select id="queryGoodsByUserId" resultType="com.share.ro.GoodsRo">
+    <select id="queryGoodsByUserId" resultType="com.share.ro.goodsRo.GoodsByUserIdRo">
         select * from share.goods where user_id=#{userId}
     </select>
 
-    <select id="queryGoodsById" resultType="com.share.ro.GoodsRo">
-        select * from share.goods where id=#{id}
+    <resultMap id="goodsById" type="com.share.ro.goodsRo.GoodsIdRo">
+        <result property="id" column="gid"/>
+        <result property="userId" column="guid"/>
+        <result property="goodsName" column="ggn"/>
+        <result property="details" column="gd"/>
+        <result property="price" column="gp"/>
+        <result property="gpicture" column="gpic"/>
+        <result property="createTime" column="gct"/>
+        <result property="upicture" column="upic"/>
+        <result property="nickname" column="unn"/>
+        <result property="stock" column="gs"/>
+        <result property="status" column="gstatus"/>
+    </resultMap>
+
+    <select id="queryGoodsById" resultMap="goodsById">
+        select g.id gid,g.user_id guid,g.goodsname ggn,g.details gd,g.price gp,g.createtime gct,g.stock gs,g.picture gpic,g.status gstatus,
+               u.id uid,u.picture upic,u.nickname unn
+        from share.goods g,share.user u
+        where g.user_id = u.id and g.id = #{id}
     </select>
 
     <insert id="addGoods" parameterType="com.share.entity.Goods">
-        insert into share.goods (goodsname,details,price,user_id,stock,picture)
-        values (#{goodsVo.goodsName},#{goodsVo.details},#{goodsVo.price},#{goodsVo.userId},#{goodsVo.stock},#{goodsVo.picture})
+        insert into share.goods (goodsname,details,price,user_id,stock,createtime)
+        values (#{goodsVo.goodsName},#{goodsVo.details},#{goodsVo.price},#{userId},#{goodsVo.stock},#{goodsVo.createTime})
     </insert>
 
-<!--    名字，描述，价格，库存，图片-->
+<!--    名字，描述，价格，库存-->
     <update id="updateGoods">
         update share.goods
-        set goodsname=#{goodsVo.goodsName},details=#{goodsVo.details},price=#{goodsVo.price},stock=#{goodsVo.stock},picture=#{goodsVo.picture}
+        set goodsname=#{goodsVo.goodsName},details=#{goodsVo.details},price=#{goodsVo.price},stock=#{goodsVo.stock}
         where id=#{id};
     </update>
 
@@ -34,5 +68,9 @@
         where id=#{id}
     </update>
 
-
+    <update id="updatePicture">
+        update share.goods
+        set picture=#{goodsVo.picture}
+        where id=#{id};
+    </update>
 </mapper>

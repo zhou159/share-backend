@@ -57,4 +57,8 @@ public class Comments implements Serializable {
     @TableField("text")
     private String text;
 
+    @ApiModelProperty(value = "评论对象类型")
+    @TableField("type")
+    private String type;
+
 }

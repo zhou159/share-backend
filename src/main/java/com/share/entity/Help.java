@@ -47,21 +47,13 @@ public class Help implements Serializable {
     @TableField("type")
     private String type;
 
-    @ApiModelProperty(value = "外卖存放地址、外卖小哥等待地址")
-    @TableField("delivery_address")
-    private String deliveryAddress;
+    @ApiModelProperty(value = "外卖、快递存放地址、外卖小哥等待地址")
+    @TableField("address")
+    private String address;
 
-    @ApiModelProperty(value = "外卖小哥电话")
-    @TableField("delivery_man_tel")
-    private String deliveryManTel;
-
-    @ApiModelProperty(value = "快递存放地址")
-    @TableField("parcel_address")
-    private String parcelAddress;
-
-    @ApiModelProperty(value = "取快递的凭证（比如：提取码，手机号，手机尾号四位数。。）")
-    @TableField("parcel_proof")
-    private String parcelProof;
+    @ApiModelProperty(value = "取快递，外卖的凭证（比如：提取码，手机号，手机尾号四位数，外卖上的姓名，电话等等）")
+    @TableField("details")
+    private String details;
 
     @ApiModelProperty(value = "报酬")
     @TableField("price")
@@ -74,5 +66,9 @@ public class Help implements Serializable {
     @ApiModelProperty(value = "帮助修改时间")
     @TableField("updatetime")
     private LocalDateTime updateTime;
+
+    @ApiModelProperty(value = "帮助状态")
+    @TableField("status")
+    private String status;
 
 }

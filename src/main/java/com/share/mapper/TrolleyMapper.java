@@ -2,7 +2,7 @@ package com.share.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.share.entity.Trolley;
-import com.share.ro.TrolleyRo;
+import com.share.ro.trolleyRo.TrolleyRo;
 import com.share.vo.TrolleyVo;
 import org.apache.ibatis.annotations.Param;
 

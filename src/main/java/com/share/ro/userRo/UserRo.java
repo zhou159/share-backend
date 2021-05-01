@@ -1,4 +1,4 @@
-package com.share.ro;
+package com.share.ro.userRo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;

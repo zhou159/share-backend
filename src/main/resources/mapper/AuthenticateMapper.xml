@@ -3,13 +3,25 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.share.mapper.AuthenticateMapper">
-    <select id="findAuthenticateByAdminNickName" resultType="com.share.ro.AuthenticateRo">
-        select * from authenticate where admin_nickname = #{adminName}
+    <resultMap id="auth" type="com.share.ro.authenticateRo.AuthenticateRo">
+        <result property="nickname" column="unickname"/>
+        <result property="picture" column="up"/>
+        <result property="id" column="aid"/>
+        <result property="userId" column="auid"/>
+        <result property="adminUid" column="aan"/>
+        <result property="authenticatePicture" column="aap"/>
+        <result property="createTime" column="acreatetime"/>
+    </resultMap>
+    <select id="findAuthenticateByAdminUserId" resultMap="auth" resultType="com.share.ro.authenticateRo.AuthenticateRo">
+        select a.id aid,a.user_id auid,a.admin_uid aan,a.authenticate_picture aap,a.createtime acreatetime,
+               u.nickname unickname,u.picture up
+        from share.authenticate a,share.user u
+        where u.id = a.user_id and a.admin_uid = #{userId} and a.status = '0'
     </select>
 
     <insert id="addAuthenticate">
-        insert into authenticate (user_id,admin_nickname,authenticate_picture,createtime) values
-            (#{authenticateVo.userId},#{authenticateVo.adminNickname},#{authenticateVo.authenticatePicture},#{authenticateVo.createTime})
+        insert into authenticate (user_id,admin_uid,authenticate_picture,createtime) values
+            (#{authenticateVo.userId},#{authenticateVo.adminUid},#{authenticateVo.authenticatePicture},#{authenticateVo.createTime})
     </insert>
 
     <update id="updateStatus">

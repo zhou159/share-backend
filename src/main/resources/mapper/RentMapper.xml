@@ -4,30 +4,30 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.share.mapper.RentMapper">
 
-    <select id="queryAllRent" resultType="com.share.ro.RentRo">
-        select * from share.rent
+    <select id="queryAllRentDepart" resultType="com.share.ro.rentRo.RentRo">
+        select * from share.rent where status = '0' and deleted = '0' and type = '房屋'
     </select>
 
-    <select id="queryRentByUserId" resultType="com.share.ro.RentRo">
-        select * from share.rent where user_id_rent=#{userIdRent}
+    <select id="queryAllRentPark" resultType="com.share.ro.rentRo.RentRo">
+        select * from share.rent where status = '0' and deleted = '0' and type = '车位'
+    </select>
+
+    <select id="queryRentParkByUserId" resultType="com.share.ro.rentRo.RentUserIdRo">
+        select * from share.rent where user_id_rent=#{userIdRent} and type = '车位'
+    </select>
+
+    <select id="queryRentDepartByUserId" resultType="com.share.ro.rentRo.RentUserIdRo">
+        select * from share.rent where user_id_rent=#{userIdRent} and type = '房屋'
     </select>
 
     <insert id="addRent">
-        insert into share.rent
-        <if test="rentVo.type == '房屋'">
-            (user_id_rent,type,department_address,price,createtime)
-            values (#{rentVo.userIdRent},#{rentVo.type},#{rentVo.departmentAddress},#{rentVo.price},#{rentVo.createTime});
-        </if>
-        <if test="rentVo.type == '车位'">
-            (user_id_rent,type,parking_address,price,createtime)
-            values (#{rentVo.userIdRent},#{rentVo.type},#{rentVo.parkingAddress},#{rentVo.price},#{rentVo.createTime});
-        </if>
+        insert into share.rent (user_id_rent,type,address,price,createtime,details)
+        values (#{rentVo.userIdRent},#{rentVo.type},#{rentVo.address},#{rentVo.price},#{rentVo.createTime},#{rentVo.details});
     </insert>
 
     <update id="updateRent">
         update share.rent
-        set type=#{rentVo.type},department_address=#{rentVo.departmentAddress},
-            parking_address=#{rentVo.parkingAddress},price=#{rentVo.price},updatetime=#{rentVo.updateTime}
+        set address=#{rentVo.address},price=#{rentVo.price},updatetime=#{rentVo.updateTime},details=#{rentVo.details}
         where id=#{id}
     </update>
 
@@ -48,4 +48,24 @@
         set status = #{rentVo.status}
         where id=#{id};
     </update>
+
+    <resultMap id="rentById" type="com.share.ro.rentRo.RentRo">
+        <result property="id" column="rid"/>
+        <result property="userIdRent" column="ruidr"/>
+        <result property="type" column="rt"/>
+        <result property="address" column="ra"/>
+        <result property="price" column="rp"/>
+        <result property="createTime" column="rct"/>
+        <result property="updateTime" column="rut"/>
+        <result property="details" column="rd"/>
+        <result property="picture" column="upic"/>
+        <result property="nickname" column="unn"/>
+    </resultMap>
+
+    <select id="queryRentById" resultMap="rentById">
+        select r.id rid,r.user_id_rent ruidr,r.type rt,r.address ra,r.price rp,r.createtime rct,r.updatetime rut,r.details rd,
+               u.id uid,u.picture upic,u.nickname unn
+        from share.rent r,share.user u
+        where r.user_id_rent = u.id and r.id = #{id}
+    </select>
 </mapper>

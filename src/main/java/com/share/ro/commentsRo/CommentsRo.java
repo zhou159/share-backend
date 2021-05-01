@@ -1,4 +1,4 @@
-package com.share.ro;
+package com.share.ro.commentsRo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

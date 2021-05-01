@@ -5,53 +5,51 @@
 <mapper namespace="com.share.mapper.HelpMapper">
 
     <insert id="addHelp">
-        insert into share.help
-        <if test="helpVo.type == '外卖'">
-            (user_id_help,type,delivery_address,delivery_man_tel,price,createtime)
-            values (#{helpVo.userIdHelp},#{helpVo.type},#{helpVo.deliveryAddress},
-                    #{helpVo.deliveryManTel},#{helpVo.price},#{helpVo.createTime})
-        </if>
-        <if test="helpVo.type == '快递'">
-            (user_id_help,type,parcel_address,parcel_proof,price,createtime)
-            values (#{helpVo.userIdHelp},#{helpVo.type},#{helpVo.parcelAddress},
-                    #{helpVo.parcelProof},#{helpVo.price},#{helpVo.createTime})
-        </if>
+        insert into share.help (user_id_help,type,address,details,price,createtime)
+            values (#{userId},#{helpVo.type},#{helpVo.address},#{helpVo.details},#{helpVo.price},#{helpVo.createTime})
     </insert>
 
     <update id="updateHelp">
         update share.help
-        set type=#{helpVo.type},delivery_address=#{helpVo.deliveryAddress},
-            delivery_man_tel=#{helpVo.deliveryManTel},
-            parcel_address=#{helpVo.parcelAddress},parcel_proof=#{helpVo.parcelProof},
-            price=#{helpVo.price},updatetime=#{helpVo.updateTime}
+        set address=#{helpVo.address},details=#{helpVo.details},price=#{helpVo.price},updatetime=#{helpVo.updateTime}
         where id=#{id};
     </update>
 
     <update id="updateHelper">
-        update share.goods
+        update share.help
         set user_id_helper = #{helpVo.userIdHelper}
         where id=#{id};
     </update>
 
     <delete id="deleteHelp">
-        delete from share.goods where id=#{id}
+        delete from share.help where id=#{id}
     </delete>
 
-    <select id="queryAllHelp" resultType="com.share.ro.HelpRo">
-        select * from share.goods
+    <resultMap id="allHelp" type="com.share.ro.helpRo.HelpRo">
+        <result property="id" column="hid"/>
+        <result property="userIdHelp" column="huid"/>
+        <result property="address" column="ha"/>
+        <result property="details" column="hd"/>
+        <result property="price" column="hp"/>
+        <result property="createTime" column="hct"/>
+        <result property="updateTime" column="hut"/>
+        <result property="upicture" column="upic"/>
+        <result property="nickname" column="unickname"/>
+        <result property="type" column="hty"/>
+    </resultMap>
+
+    <select id="queryAllDeliveryHelp" resultMap="allHelp">
+        select h.id hid,h.user_id_help huid,h.address ha,h.details hd,h.price hp,h.createtime hct,h.updatetime hut,h.type hty,
+               u.id uid,u.picture upic,u.nickname unickname
+        from share.help h,share.user u
+        where h.user_id_help = u.id and h.type = '外卖' and h.status = '0'
     </select>
 
-    <select id="queryHelperByUserId" resultType="com.share.ro.HelpRo">
-        select * from share.goods where user_id_helper=#{userIdHelper}
+    <select id="queryAllParcelHelp" resultMap="allHelp">
+        select h.id hid,h.user_id_help huid,h.address ha,h.details hd,h.price hp,h.createtime hct,h.updatetime hut,h.type hty,
+               u.id uid,u.picture upic,u.nickname unickname
+        from share.help h,share.user u
+        where h.user_id_help = u.id and h.type = '快递' and h.status = '0'
     </select>
-
-    <select id="queryHelpByUserId" resultType="com.share.ro.HelpRo">
-        select * from share.goods where user_id_help=#{userIdHelp}
-    </select>
-
-    <select id="queryHelpById" resultType="com.share.ro.HelpRo">
-
-    </select>
-
 
 </mapper>

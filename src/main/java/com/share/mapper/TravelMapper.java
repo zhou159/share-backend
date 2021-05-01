@@ -2,7 +2,7 @@ package com.share.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.share.entity.Travel;
-import com.share.ro.TravelRo;
+import com.share.ro.travelRo.TravelRo;
 import com.share.vo.TravelVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

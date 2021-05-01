@@ -4,15 +4,41 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.share.mapper.OrderMapper">
 
-    <select id="queryOrderByUserId" resultType="com.share.ro.OrderRo">
-        select * from share.order where user_id=#{userId}
+    <resultMap id="userOrders" type="com.share.ro.orderRo.UserOrderRo" >
+        <result property="id" column="oid"/>
+        <result property="goodsName" column="ggn"/>
+        <result property="goodsId" column="ogid"/>
+        <result property="GPicture" column="gpic"/>
+        <result property="goodsPrice" column="gp"/>
+        <result property="status" column="os"/>
+    </resultMap>
+
+    <select id="queryOrderByUserId" resultMap="userOrders">
+        select o.id oid,o.goods_id ogid,o.status os,
+               g.goodsname ggn,g.picture gpic,g.price gp
+        from share.order o,share.goods g
+        where o.goods_id = g.id and o.user_id=#{userId} and o.deleted = '0'
     </select>
 
-    <select id="queryOrderById" resultType="com.share.ro.OrderRo">
-        select * from share.order where id=#{id}
+    <resultMap id="order" type="com.share.ro.orderRo.OrderRo">
+        <result property="id" column="oid"/>
+        <result property="goodsName" column="ggn"/>
+        <result property="goodsId" column="ogid"/>
+        <result property="GPicture" column="gpic"/>
+        <result property="goodsPrice" column="gp"/>
+        <result property="orderNo" column="oon"/>
+        <result property="status" column="os"/>
+        <result property="createTime" column="oct"/>
+    </resultMap>
+
+    <select id="queryOrderById" resultMap="order">
+        select o.id oid,o.order_no oon,o.createtime oct,o.goods_id ogid,o.status os,
+               g.goodsname ggn,g.picture gpic,g.price gp
+        from share.order o,share.goods g
+        where o.goods_id = g.id and o.id=#{id}
     </select>
 
-    <select id="queryOrderByOrderNo" resultType="com.share.ro.OrderRo">
+    <select id="queryOrderByOrderNo" resultType="com.share.ro.orderRo.OrderRo">
         select * from share.order where order_no=#{orderNo}
     </select>
 

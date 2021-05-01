@@ -1,4 +1,4 @@
-package com.share.ro;
+package com.share.ro.helpRo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -16,23 +16,23 @@ public class HelpRo {
     @ApiModelProperty(value = "求助人id")
     private Integer userIdHelp;
 
+    @ApiModelProperty(value = "求助人头像")
+    private String upicture;
+
+    @ApiModelProperty(value = "求助人昵称")
+    private String nickname;
+
     @ApiModelProperty(value = "帮助人id")
     private Integer userIdHelper;
 
     @ApiModelProperty(value = "帮助类型(快递，外卖)")
     private String type;
 
-    @ApiModelProperty(value = "外卖存放地址、外卖小哥等待地址")
-    private String deliveryAddress;
+    @ApiModelProperty(value = "外卖、快递存放地址、外卖小哥等待地址")
+    private String address;
 
-    @ApiModelProperty(value = "外卖小哥电话")
-    private String deliveryManTel;
-
-    @ApiModelProperty(value = "快递存放地址")
-    private String parcelAddress;
-
-    @ApiModelProperty(value = "取快递的凭证（比如：提取码，手机号，手机尾号四位数。。）")
-    private String parcelProof;
+    @ApiModelProperty(value = "取快递，外卖的凭证（比如：提取码，手机号，手机尾号四位数，外卖上的姓名，电话等等）")
+    private String details;
 
     @ApiModelProperty(value = "报酬")
     private BigDecimal price;

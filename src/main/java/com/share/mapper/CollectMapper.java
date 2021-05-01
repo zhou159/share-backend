@@ -2,7 +2,7 @@ package com.share.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.share.entity.Collect;
-import com.share.ro.CollectRo;
+import com.share.ro.collectRo.CollectRo;
 import com.share.vo.CollectVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -22,5 +22,7 @@ public interface CollectMapper extends BaseMapper<Collect> {
 
     //查询收藏(收藏物id)
     CollectRo queryCollectById(@Param("id")int id);
+
+    Collect isExist(@Param("collectVo")CollectVo collectVo);
 
 }

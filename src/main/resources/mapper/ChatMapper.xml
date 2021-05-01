@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.share.mapper.ChatMapper">
+
+    <insert id="addChat">
+        insert into share.chat (user_id_from,user_id_to,message,send_time,status,sender_avatar)
+        values (#{chatVo.userIdFrom},#{chatVo.userIdTo},#{chatVo.message},#{chatVo.sendTime},#{chatVo.status},#{chatVo.senderAvatar})
+    </insert>
+
+    <delete id="deleteChatById">
+        delete from share.chat where id = #{id}
+    </delete>
+
+    <select id="queryChatByUserId" resultType="com.share.ro.chatRo.ChatRo">
+        select * from share.chat where user_id_from = #{userId} or user_id_to = #{userId}
+    </select>
+
+<!--    <select id="queryChatByUserIdTo" resultType="com.share.ro.chatRo.ChatRo">-->
+<!--        select * from share.chat where user_id_to = #{userIdTo}-->
+<!--    </select>-->
+
+    <update id="updateChat" parameterType="list">
+        update share.chat
+        set status = '1'
+        where id in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            ${item}
+        </foreach>
+    </update>
+
+    <delete id="deleteChat">
+        delete from share.chat
+        where user_id_from = #{chatVo.userIdFrom}
+          and user_id_to = #{chatVo.userIdTo}
+          and message =#{chatVo.message}
+          and send_time = #{chatVo.sendTime}
+    </delete>
+
+    <select id="selectChatById" resultType="com.share.ro.chatRo.ChatRo">
+        select * from share.chat where id = #{id}
+    </select>
+
+    <select id="countAll" resultType="int">
+        select count(case when status="0" then 1 else null end ) from share.chat where user_id_to = #{userId}
+    </select>
+
+    <select id="countUnrMsgByFT" resultType="int">
+        select count(case when status="0" then 1 else null end )
+        from share.chat
+        where user_id_to = #{userId} and user_id_from = #{chatVo.userIdFrom}
+    </select>
+</mapper>

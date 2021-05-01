@@ -15,9 +15,6 @@ public class HistoryVo {
     @ApiModelProperty(value = "历史浏览交易物品id")
     private Integer goodsId;
 
-    @ApiModelProperty(value = "历史浏览帮助id")
-    private Integer helpId;
-
     @ApiModelProperty(value = "历史浏览出行id")
     private Integer travelId;
 
@@ -26,4 +23,7 @@ public class HistoryVo {
 
     @ApiModelProperty(value = "历史浏览最新浏览时间")
     private LocalDateTime lastTime;
+
+    @ApiModelProperty(value = "历史记录类型(交易物品，出行，出租，帮助)")
+    private String type;
 }

@@ -1,7 +1,8 @@
 package com.share.service;
 
 import com.share.mapper.OrderMapper;
-import com.share.ro.OrderRo;
+import com.share.ro.orderRo.OrderRo;
+import com.share.ro.orderRo.UserOrderRo;
 import com.share.vo.OrderVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ public class OrderService {
     @Autowired
     OrderMapper orderMapper;
 
-    public List<OrderRo> queryOrderByUserId(int userId){
+    public List<UserOrderRo> queryOrderByUserId(int userId){
         return orderMapper.queryOrderByUserId(userId);
     }
 

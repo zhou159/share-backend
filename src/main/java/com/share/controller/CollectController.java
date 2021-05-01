@@ -3,7 +3,7 @@ package com.share.controller;
 import com.share.exceptions.ShareException;
 import com.share.result.RestObject;
 import com.share.result.RestResponse;
-import com.share.ro.CollectRo;
+import com.share.ro.collectRo.CollectRo;
 import com.share.service.CollectService;
 import com.share.vo.CollectVo;
 import io.swagger.annotations.Api;
@@ -21,15 +21,20 @@ public class CollectController {
     @Autowired
     CollectService collectService;
 
-    @ApiOperation("添加收藏")
+    @ApiOperation("添加收藏,userId,goodsId")
     @PostMapping("/addCollect")
     public RestObject<String> addCollect(@RequestBody CollectVo collectVo){
-        if (collectVo.getUserId().equals("")){
+        if (collectVo.getUserId().equals("") || collectVo.getUserId() == null){
             throw new ShareException("请先登录!");
         }else{
-            collectVo.setCreateTime(LocalDateTime.now());
-            collectService.addCollect(collectVo);
-            return RestResponse.makeOKRsp("添加成功!");
+            boolean b = collectService.isExist(collectVo);
+            if (b){
+                return RestResponse.makeErrRsp("该商品您已收藏过，请勿重复收藏!");
+            }else {
+                collectVo.setCreateTime(LocalDateTime.now());
+                collectService.addCollect(collectVo);
+                return RestResponse.makeOKRsp("添加成功!");
+            }
         }
     }
 

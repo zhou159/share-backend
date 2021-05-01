@@ -1,6 +1,5 @@
 package com.share.vo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -36,4 +35,7 @@ public class TravelVo {
 
     @ApiModelProperty(value = "出行逻辑删除")
     private  int deleted;
+
+    @ApiModelProperty(value = "出行title")
+    private String title;
 }

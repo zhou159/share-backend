@@ -39,27 +39,23 @@ public class Rent implements Serializable {
     @TableField("user_id_rent")
     private Integer userIdRent;
 
-    @ApiModelProperty(value = "租赁人id")
-    @TableField("user_id_renter")
-    private Integer userIdRenter;
+//    @ApiModelProperty(value = "租赁人id")
+//    @TableField("user_id_renter")
+//    private Integer userIdRenter;
 
     @ApiModelProperty(value = "出租类型（department:房屋；parking：停车位）")
     @TableField("type")
     private String type;
 
-    @ApiModelProperty(value = "出租屋地址")
-    @TableField("department_address")
-    private String departmentAddress;
-
-    @ApiModelProperty(value = "停车位地址")
-    @TableField("parking_address")
-    private String parkingAddress;
+    @ApiModelProperty(value = "出租屋、车位地址")
+    @TableField("address")
+    private String address;
 
     @ApiModelProperty(value = "出租价格")
     @TableField("price")
     private BigDecimal price;
 
-    @ApiModelProperty(value = "出租状态（0：出租中，1：已出租）")
+    @ApiModelProperty(value = "出租状态（0：出租中，1：被租用中，2：空闲中；3：不再对外出租；4：洽谈中）")
     @TableField("status")
     private String status;
 
@@ -74,6 +70,10 @@ public class Rent implements Serializable {
     @ApiModelProperty(value = "出租修改时间")
     @TableField("updatetime")
     private LocalDateTime updateTime;
+
+    @ApiModelProperty(value = "出租描述")
+    @TableField("details")
+    private String details;
 
 
 }

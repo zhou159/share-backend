@@ -20,11 +20,8 @@ public class RentVo {
     @ApiModelProperty(value = "出租类型（department:房屋；parking：停车位）")
     private String type;
 
-    @ApiModelProperty(value = "出租屋地址")
-    private String departmentAddress;
-
-    @ApiModelProperty(value = "停车位地址")
-    private String parkingAddress;
+    @ApiModelProperty(value = "出租屋、车位地址")
+    private String address;
 
     @ApiModelProperty(value = "出租价格")
     private BigDecimal price;
@@ -40,4 +37,7 @@ public class RentVo {
 
     @ApiModelProperty(value = "出租修改时间")
     private LocalDateTime updateTime;
+
+    @ApiModelProperty(value = "出租描述")
+    private String details;
 }

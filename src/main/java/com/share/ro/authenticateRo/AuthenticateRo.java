@@ -1,4 +1,4 @@
-package com.share.ro;
+package com.share.ro.authenticateRo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -15,8 +15,14 @@ public class AuthenticateRo {
     @ApiModelProperty(value = "审核用户id")
     private Integer userId;
 
+    @ApiModelProperty(value = "审核用户头像")
+    private String picture;
+
+    @ApiModelProperty(value = "审核用户昵称")
+    private String nickname;
+
     @ApiModelProperty(value = "管理员nickname")
-    private String adminNickname;
+    private Integer adminUid;
 
     @ApiModelProperty(value = "审核图片")
     private String authenticatePicture;
@@ -24,6 +30,4 @@ public class AuthenticateRo {
     @ApiModelProperty(value = "审核创建时间")
     private LocalDateTime createTime;
 
-    @ApiModelProperty(value = "审核状态")
-    private String status;
 }

@@ -3,7 +3,8 @@ package com.share.controller;
 import com.share.enums.Source;
 import com.share.result.RestObject;
 import com.share.result.RestResponse;
-import com.share.ro.OrderRo;
+import com.share.ro.orderRo.OrderRo;
+import com.share.ro.orderRo.UserOrderRo;
 import com.share.service.OrderService;
 import com.share.util.RandomUtil;
 import com.share.vo.OrderVo;
@@ -24,12 +25,12 @@ public class OrderController {
 
     @ApiOperation("按用户id查询订单")
     @GetMapping("/queryOrderByUserId/{userId}")
-    public RestObject<List<OrderRo>> queryOrderByUserId(@PathVariable int userId){
+    public RestObject<List<UserOrderRo>> queryOrderByUserId(@PathVariable int userId){
         return RestResponse.makeOKRsp(orderService.queryOrderByUserId(userId));
     }
 
     @ApiOperation("按id查询订单")
-    @GetMapping("/queryOrderByUserId/{id}")
+    @GetMapping("/queryOrderById/{id}")
     public RestObject<OrderRo> queryOrderById(@PathVariable int id){
         return RestResponse.makeOKRsp(orderService.queryOrderById(id));
     }

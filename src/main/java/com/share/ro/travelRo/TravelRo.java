@@ -1,4 +1,4 @@
-package com.share.ro;
+package com.share.ro.travelRo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
@@ -15,6 +15,12 @@ public class TravelRo {
 
     @ApiModelProperty(value = "出行人id")
     private Integer userId;
+
+    @ApiModelProperty(value = "出行人头像")
+    private String picture;
+
+    @ApiModelProperty(value = "出行人昵称")
+    private String nickname;
 
     @ApiModelProperty(value = "出行目的地")
     private String destination;
@@ -36,7 +42,4 @@ public class TravelRo {
 
     @ApiModelProperty(value = "出行状态")
     private  String status;
-
-    @ApiModelProperty(value = "出行逻辑删除")
-    private  int deleted;
 }

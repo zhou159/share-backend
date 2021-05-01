@@ -55,19 +55,23 @@ public class Travel implements Serializable {
 
     @ApiModelProperty(value = "出行创建时间")
     @TableField("createtime")
-    private  LocalDateTime createTime;
+    private LocalDateTime createTime;
 
     @ApiModelProperty(value = "出行修改时间")
     @TableField("updatetime")
-    private  LocalDateTime updateTime;
+    private LocalDateTime updateTime;
 
     @ApiModelProperty(value = "出行状态")
     @TableField("status")
-    private  String status;
+    private String status;
 
     @ApiModelProperty(value = "出行逻辑删除")
     @TableField("deleted")
-    private  int deleted;
+    private int deleted;
+
+    @ApiModelProperty(value = "出行title")
+    @TableField("title")
+    private String title;
 
 
 }

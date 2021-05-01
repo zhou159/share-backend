@@ -1,7 +1,8 @@
 package com.share.service;
 
 import com.share.mapper.ArticleMapper;
-import com.share.ro.ArticleRo;
+import com.share.ro.articleRo.AllEArticleRo;
+import com.share.ro.articleRo.ArticleRo;
 import com.share.vo.ArticleVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class ArticleService {
         articleMapper.deleteArticle(id);
     }
 
-    public List<ArticleRo> queryAllArticle(){
+    public List<AllEArticleRo> queryAllArticle(){
         return articleMapper.queryAllArticle();
     }
 

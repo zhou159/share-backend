@@ -2,7 +2,7 @@ package com.share.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.share.entity.User;
-import com.share.ro.UserRo;
+import com.share.ro.userRo.UserRo;
 import com.share.vo.UserVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

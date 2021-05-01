@@ -5,8 +5,8 @@ import com.share.entity.User;
 import com.share.exceptions.ShareException;
 import com.share.result.RestObject;
 import com.share.result.RestResponse;
-import com.share.ro.AuthenticateRo;
-import com.share.ro.UserRo;
+import com.share.ro.authenticateRo.AuthenticateRo;
+import com.share.ro.userRo.UserRo;
 import com.share.service.AuthenticateService;
 import com.share.service.UserService;
 import com.share.util.MinioUtil;
@@ -42,11 +42,12 @@ public class AuthenticateController {
     public RestObject<String> addAuthenticate(@PathVariable int userId,@PathVariable String adminNickname ,MultipartFile file){
         String s = minioUtil.upload(file, "authenticate");
         AuthenticateVo authenticateVo = new AuthenticateVo();
+        User user = userService.queryByNickName(adminNickname);
         if(s.equals("文件为空") || s.equals("上传失败")){
             throw new ShareException("图片上传失败,请更换图片或重新尝试!");
         }else {
             authenticateVo.setUserId(userId);
-            authenticateVo.setAdminNickname(adminNickname);
+            authenticateVo.setAdminUid(user.getId());
             authenticateVo.setCreateTime(LocalDateTime.now());
             authenticateVo.setAuthenticatePicture(s);
             authenticateService.addAuthenticate(authenticateVo);
@@ -54,14 +55,14 @@ public class AuthenticateController {
         }
     }
 
-    @ApiOperation("修改审核状态，并将用户表对应用户状态修改")
+    @ApiOperation("修改审核状态，并将用户表对应用户状态修改;前端需要传入bool值：success,失败为fasle,成功为true")
     @PostMapping("/updateStatus/{id}")
-    public RestObject<String> updateStatus(@PathVariable int id,@RequestBody boolean success){
+    public RestObject<String> updateStatus(@PathVariable int id,@RequestBody AuthenticateVo authenticateVo){
         Authenticate authenticate= authenticateService.findAuthenticateById(id);
         Integer userId = authenticate.getUserId();
         UserRo user = userService.queryUserById(userId);
         UserVo vo = new UserVo();
-        if(success){
+        if(authenticateVo.isSuccess()){
             user.setStatus("2");
             user.setCreditScore(100);
             BeanUtils.copyProperties(user,vo);
@@ -76,10 +77,8 @@ public class AuthenticateController {
     }
 
     @ApiOperation("按管理员nickname查询审核")
-    @GetMapping("/findAuthenticateByAdminNickName/{userId}")
+    @GetMapping("/findAuthenticateByAdminUserId/{userId}")
     public RestObject<List<AuthenticateRo>> findAuthenticateByAdminNickName(@PathVariable int userId){
-        UserRo userRo = userService.queryUserById(userId);
-        String nickname = userRo.getNickname();
-        return RestResponse.makeOKRsp(authenticateService.findAuthenticateByAdminNickName(nickname));
+        return RestResponse.makeOKRsp(authenticateService.findAuthenticateByAdminUserId(userId));
     }
 }

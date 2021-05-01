@@ -1,7 +1,8 @@
 package com.share.service;
 
+import com.share.entity.Collect;
 import com.share.mapper.CollectMapper;
-import com.share.ro.CollectRo;
+import com.share.ro.collectRo.CollectRo;
 import com.share.vo.CollectVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,15 @@ public class CollectService {
 
     public CollectRo queryCollectById(int id){
         return collectMapper.queryCollectById(id);
+    }
+
+    public boolean isExist(CollectVo collectVo){
+        Collect collect = collectMapper.isExist(collectVo);
+        if (collect != null){
+            return true;
+        }else {
+            return false;
+        }
     }
 
 

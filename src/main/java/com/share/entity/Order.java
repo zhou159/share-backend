@@ -41,7 +41,7 @@ public class Order implements Serializable {
     @TableField("user_id")
     private Integer userId;
 
-    @ApiModelProperty(value = "订单状态(0:未完成；1:已完成)")
+    @ApiModelProperty(value = "订单状态(0:正在交易；1:已完成；2:取消)")
     @TableField("status")
     private String status;
 

@@ -57,5 +57,9 @@ public class History implements Serializable {
     @TableField("lasttime")
     private LocalDateTime lastTime;
 
+    @ApiModelProperty(value = "历史记录类型(交易物品，出行，出租，帮助)")
+    @TableField("type")
+    private String type;
+
 
 }

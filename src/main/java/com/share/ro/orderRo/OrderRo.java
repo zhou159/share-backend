@@ -1,4 +1,4 @@
-package com.share.ro;
+package com.share.ro.orderRo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
@@ -22,12 +22,19 @@ public class OrderRo {
     @ApiModelProperty(value = "交易物品id")
     private Integer goodsId;
 
+    @ApiModelProperty(value = "交易物品名字")
+    private String goodsName;
+
+    @ApiModelProperty(value = "交易物品图片")
+    private String gPicture;
+
+    @ApiModelProperty(value = "交易物品价钱")
+    private String goodsPrice;
+
     @ApiModelProperty(value = "用户id")
     private Integer userId;
 
-    @ApiModelProperty(value = "订单状态(0:未完成；1:已完成)")
+    @ApiModelProperty(value = "订单状态(0:正在交易；1:已完成；2:取消)")
     private String status;
 
-    @ApiModelProperty(value = "订单逻辑删除(0：未删；1：删除)")
-    private int deleted;
 }
