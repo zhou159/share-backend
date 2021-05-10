@@ -15,9 +15,17 @@ public class Handler {
     @ExceptionHandler(ShareException.class)  //就是定义处理什么异常
     @ResponseBody
     @ResponseStatus(HttpStatus.OK) //服务器的异常
-    public RestObject<String> handlerUserException(Exception e){
+    public RestObject<String> handlerShareException(Exception e){
 
         return RestResponse.makeErrRsp(e.getMessage());
+    }
+
+    @ExceptionHandler(UserNotLoginException.class)  //就是定义处理什么异常
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK) //服务器的异常
+    public RestObject<String> handlerUserNotLoginException(Exception e){
+
+        return RestResponse.makeUserNotLoginRsp(e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)  //就是定义处理什么异常

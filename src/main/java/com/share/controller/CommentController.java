@@ -1,5 +1,7 @@
 package com.share.controller;
 
+import com.share.annotation.UserLoginInfo;
+import com.share.annotation.UserLoginToken;
 import com.share.entity.Comments;
 import com.share.exceptions.ShareException;
 import com.share.result.RestObject;
@@ -25,18 +27,18 @@ public class CommentController {
     @Autowired
     CommentsService commentService;
 
+    @UserLoginInfo
     @ApiOperation("添加评论")
-    @PostMapping("/addComments")
-    public RestObject<String> addComments(@RequestBody CommentsVo commentsVo){
-        if(commentsVo.getUserIdCommentator().equals("")){
-            throw new ShareException("请登录!");
-        }else {
-            commentsVo.setCreateTime(LocalDateTime.now());
-            commentService.addComments(commentsVo);
-            return RestResponse.makeOKRsp("评论成功!");
-        }
+    @PostMapping("/addComments/{userId}")
+    public RestObject<String> addComments(@RequestBody CommentsVo commentsVo,@PathVariable int userId){
+        commentsVo.setUserIdCommentator(userId);
+        commentsVo.setCreateTime(LocalDateTime.now());
+        commentService.addComments(commentsVo);
+        return RestResponse.makeOKRsp("评论成功!");
+
     }
 
+    @UserLoginInfo
     @ApiOperation("删除评论；id为评论id；userId为当前登录用户id")
     @PostMapping("/deleteComments/{id}/{userId}")
     public RestObject<String> deleteComments(@PathVariable int id,@PathVariable int userId){
@@ -50,18 +52,21 @@ public class CommentController {
         }
     }
 
+    @UserLoginToken
     @ApiOperation("按用户id查询评论")
     @GetMapping("/queryByUserId/{userId}")
     public RestObject<List<UserCommentsRo>> queryByUserId(@PathVariable int userId){
         return RestResponse.makeOKRsp(commentService.queryCommentsByUserId(userId));
     }
 
+    @UserLoginToken
     @ApiOperation("按出行id查询评论")
     @GetMapping("/queryByTravelId/{travelId}")
     public RestObject<List<TravelCommentsRo>> queryByTravelId(@PathVariable int travelId){
         return RestResponse.makeOKRsp(commentService.queryCommentsByTravelId(travelId));
     }
 
+    @UserLoginToken
     @ApiOperation("按信息id查询评论")
     @GetMapping("/queryByArticleId/{articleId}")
     public RestObject<List<ArticleCommentsRo>> queryByArticleId(@PathVariable int articleId){

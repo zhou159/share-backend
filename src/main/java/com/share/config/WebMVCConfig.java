@@ -1,22 +1,37 @@
 package com.share.config;
 
-//import com.share.interceptor.LoginInterceptor;
-//import com.share.interceptor.LoginInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.Arrays;
-import java.util.List;
+import com.share.interceptor.UserInterceptor;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.*;
+
+import java.util.Collections;
 
 
 @Configuration
 public class WebMVCConfig implements WebMvcConfigurer {
-//    @Autowired
-//    LoginInterceptor loginInterceptor;
+
+    @Bean
+    public UserInterceptor authenticationInterceptor() {
+    return new UserInterceptor();
+}
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(authenticationInterceptor())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/swagger-ui.html#/")
+                .excludePathPatterns("/swagger-resources/**")
+                .excludePathPatterns("/user/verifyCode");    // 拦截所有请求，通过判断是否有 @LoginRequired 注解 决定是否需要登录
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html#")
+                .addResourceLocations("classpath:/META-INF/resources/");
+    }
 
     @Override
     public void addCorsMappings(CorsRegistry registry){
@@ -31,10 +46,4 @@ public class WebMVCConfig implements WebMvcConfigurer {
                 .maxAge(3600);
     }
 
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//
-//        List<String> asList = Arrays.asList("/user/loginusername", "/user/logintel", "/user/registerUsername" ,"/user/registertel","/user/verifyCode","/rent/**");
-//        registry.addInterceptor(loginInterceptor).excludePathPatterns(asList);
-//    }
 }

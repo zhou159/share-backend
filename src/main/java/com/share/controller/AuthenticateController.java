@@ -1,5 +1,7 @@
 package com.share.controller;
 
+import com.share.annotation.UserLoginInfo;
+import com.share.annotation.UserLoginToken;
 import com.share.entity.Authenticate;
 import com.share.entity.User;
 import com.share.exceptions.ShareException;
@@ -36,6 +38,7 @@ public class AuthenticateController {
     @Autowired
     private MinioUtil minioUtil;
 
+    @UserLoginInfo
     @ApiOperation("新增审核")
     @PostMapping("/addAuthenticate/{userId}/{adminNickname}")
     //authvo传入参数：user_id,createtime,picture,admin_nickname
@@ -55,25 +58,30 @@ public class AuthenticateController {
         }
     }
 
-    @ApiOperation("修改审核状态，并将用户表对应用户状态修改;前端需要传入bool值：success,失败为fasle,成功为true")
-    @PostMapping("/updateStatus/{id}")
-    public RestObject<String> updateStatus(@PathVariable int id,@RequestBody AuthenticateVo authenticateVo){
+    @UserLoginInfo
+    @ApiOperation("修改审核状态，并将用户表对应用户状态修改。url参数：id:审核id；userId：审核人id；body参数：success：失败为fasle,成功为true")
+    @PostMapping("/updateStatus/{id}/{userId}")
+    public RestObject<String> updateStatus(@PathVariable int id,@PathVariable int userId,@RequestBody AuthenticateVo authenticateVo){
         Authenticate authenticate= authenticateService.findAuthenticateById(id);
-        Integer userId = authenticate.getUserId();
-        UserRo user = userService.queryUserById(userId);
-        UserVo vo = new UserVo();
-        if(authenticateVo.isSuccess()){
-            user.setStatus("2");
-            user.setCreditScore(100);
-            BeanUtils.copyProperties(user,vo);
-            userService.updateUser(userId,vo);
-            authenticateService.updateStatus(id,"1");
-            return RestResponse.makeOKRsp("操作成功!审核通过");
+        Integer adminUid = authenticate.getAdminUid();
+        if (userId!=adminUid){
+            return RestResponse.UserErrRsp("你无权修改");
         }else {
-            authenticateService.updateStatus(id,"2");
-            return RestResponse.makeOKRsp("操作成功!审核失败");
+            Integer userId_ = authenticate.getUserId();
+            UserRo user = userService.queryUserById(userId_);
+            UserVo vo = new UserVo();
+            if(authenticateVo.isSuccess()){
+                user.setStatus("2");
+                user.setCreditScore(100);
+                BeanUtils.copyProperties(user,vo);
+                userService.updateUser(userId_,vo);
+                authenticateService.updateStatus(id,"1");
+                return RestResponse.makeOKRsp("操作成功!审核通过");
+            }else {
+                authenticateService.updateStatus(id,"2");
+                return RestResponse.makeOKRsp("操作成功!审核失败");
+            }
         }
-
     }
 
     @ApiOperation("按管理员nickname查询审核")

@@ -19,6 +19,9 @@ public class OrderVo {
     @ApiModelProperty(value = "交易物品id")
     private Integer goodsId;
 
+    @ApiModelProperty(value = "交易物品用户id")
+    private Integer userIdG;
+
     @ApiModelProperty(value = "用户id")
     private Integer userId;
 

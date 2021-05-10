@@ -1,5 +1,6 @@
 package com.share.service;
 
+import com.share.entity.History;
 import com.share.mapper.HistoryMapper;
 import com.share.ro.historyRo.GoodsHistoryRo;
 import com.share.ro.historyRo.HistoryRo;
@@ -49,6 +50,10 @@ public class HistoryService {
 
     public HistoryRo queryHistoryByObjId(HistoryVo historyVo){
         return historyMapper.queryHistoryByObjId(historyVo);
+    }
+
+    public History queryHistoryById(int id){
+        return historyMapper.selectById(id);
     }
 
     public int updateHistory(HistoryVo historyVo){

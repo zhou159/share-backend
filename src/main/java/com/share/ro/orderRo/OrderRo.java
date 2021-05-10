@@ -22,6 +22,9 @@ public class OrderRo {
     @ApiModelProperty(value = "交易物品id")
     private Integer goodsId;
 
+    @ApiModelProperty(value = "交易物品用户id")
+    private Integer userIdG;
+
     @ApiModelProperty(value = "交易物品名字")
     private String goodsName;
 

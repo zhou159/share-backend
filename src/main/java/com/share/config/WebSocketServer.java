@@ -128,6 +128,7 @@ public class WebSocketServer {
                 }
 
                 //将消息存入数据库中
+                System.out.println("消息存入数据库了");
                 chatService.addChat(vo);
 
             }catch (Exception e){

@@ -1,5 +1,7 @@
 package com.share.controller;
 
+import com.share.annotation.UserLoginInfo;
+import com.share.annotation.UserLoginToken;
 import com.share.exceptions.ShareException;
 import com.share.result.RestObject;
 import com.share.result.RestResponse;
@@ -28,24 +30,28 @@ public class GoodsController {
     @Autowired
     private MinioUtil minioUtil;
 
+    @UserLoginToken
     @ApiOperation("查询全部交易物品")
     @GetMapping("/queryAllGoods")
     public RestObject<List<GoodsAllRo>> queryAllGoods(){
         return RestResponse.makeOKRsp(goodsService.queryAllGoods());
     }
 
+    @UserLoginToken
     @ApiOperation("按用户id查询交易物品")
     @GetMapping("/queryByUserId/{userId}")
     public RestObject<List<GoodsByUserIdRo>> queryGoodsByUserId(@PathVariable int userId){
         return RestResponse.makeOKRsp(goodsService.queryGoodsByUserId(userId));
     }
 
+    @UserLoginToken
     @ApiOperation("按id查询交易物品")
     @GetMapping("/queryById/{id}")
     public RestObject<GoodsIdRo> queryGoodsById(@PathVariable int id){
         return RestResponse.makeOKRsp(goodsService.queryGoodsById(id));
     }
 
+    @UserLoginInfo
     @ApiOperation("修改交易物品图片")
     @PostMapping("/updatePicture/{id}/{userId}")
     public RestObject<String> updatePicture(@PathVariable int id,@PathVariable int userId,MultipartFile file){
@@ -70,19 +76,21 @@ public class GoodsController {
         }
     }
 
+    @UserLoginInfo
     @ApiOperation("新增交易物品:需要填写的属性值：goodsName；details；price；stock;userId为当前用户id")
     @PostMapping("/addGoods/{userId}")
     public RestObject<String> addGoods(@RequestBody GoodsVo goodsVo,@PathVariable int userId){
         goodsVo.setCreateTime(LocalDateTime.now());
         int i = goodsService.addGoods(goodsVo,userId);
         if(i==0) {
-            return RestResponse.makeOKRsp("新增成功!");
+            return RestResponse.makeOKRsp("发布成功!");
         }else {
-            return RestResponse.makeErrRsp("新增失败!");
+            return RestResponse.makeErrRsp("发布失败!");
         }
 
     }
 
+    @UserLoginInfo
     @ApiOperation("修改交易物品信息(名字，描述，价格，库存)")
     @PostMapping("/updateGoods/{id}/{userId}")
     public RestObject<String> updateGoods(@PathVariable int id,@PathVariable int userId,@RequestBody GoodsVo goodsVo){
@@ -100,6 +108,7 @@ public class GoodsController {
         }
     }
 
+    @UserLoginInfo
     @ApiOperation("修改交易交易物品状态(1:已售；2:下架),id:货物id;userId:当前用户id")
     @PostMapping("/updateGoodsStatus/{id}/{userId}")
     public RestObject<String> updateGoodsStatus(@PathVariable int id,@PathVariable int userId,@RequestBody GoodsVo goodsVo){

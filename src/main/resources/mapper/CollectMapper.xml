@@ -14,7 +14,7 @@
 
     <resultMap id="collect" type="com.share.ro.collectRo.CollectRo">
         <result property="id" column="cid"/>
-<!--        <result property="userId" column="cuid"/>-->
+        <result property="userId" column="cuid"/>
         <result property="goodsId" column="cgid"/>
         <result property="createTime" column="cct"/>
         <result property="goodsName" column="ggn"/>
@@ -23,7 +23,7 @@
     </resultMap>
 
     <select id="queryCollectByUserId" resultMap="collect" resultType="com.share.ro.collectRo.CollectRo">
-        select c.id cid,c.goods_id cgid,c.createtime cct,
+        select c.id cid,c.goods_id cgid,c.createtime cct,c.user_id cuid,
                g.goodsname ggn,g.price gp,g.picture gpc
         from share.collect c,share.goods g
         where c.goods_id = g.id and c.user_id=#{userId}

@@ -1,5 +1,7 @@
 package com.share.controller;
 
+import com.share.annotation.UserLoginInfo;
+import com.share.annotation.UserLoginToken;
 import com.share.result.RestObject;
 import com.share.result.RestResponse;
 import com.share.ro.rentRo.RentRo;
@@ -21,41 +23,47 @@ public class RentController {
     @Autowired
     RentService rentService;
 
+    @UserLoginToken
     @ApiOperation("按id查询查询出租中的房屋或车位")
     @GetMapping("/queryRentById/{id}")
     public RestObject<RentRo> queryRentById(@PathVariable int id){
         return RestResponse.makeOKRsp(rentService.queryRentById(id));
     }
 
+    @UserLoginToken
     @ApiOperation("查询全部出租中的房屋")
     @GetMapping("/queryAllRentDepart")
     public RestObject<List<RentRo>> queryAllRentDepart(){
         return RestResponse.makeOKRsp(rentService.queryAllRentDepart());
     }
 
+    @UserLoginToken
     @ApiOperation("查询全部出租中的车位")
     @GetMapping("/queryAllRentPark")
     public RestObject<List<RentRo>> queryAllRentPark(){
         return RestResponse.makeOKRsp(rentService.queryAllRentPark());
     }
 
+    @UserLoginToken
     @ApiOperation("按出租人id查询所有出租的车位")
-    @GetMapping("/queryRentParkByUserId/{userIdRent}")
-    public RestObject<List<RentUserIdRo>> queryRentParkByUserId(@PathVariable int userIdRent){
-        return RestResponse.makeOKRsp(rentService.queryRentParkByUserId(userIdRent));
+    @GetMapping("/queryRentParkByUserId/{userId}")
+    public RestObject<List<RentUserIdRo>> queryRentParkByUserId(@PathVariable int userId){
+        return RestResponse.makeOKRsp(rentService.queryRentParkByUserId(userId));
     }
 
+    @UserLoginToken
     @ApiOperation("按出租人id查询所有出租的房屋")
-    @GetMapping("/queryRentDepartByUserId/{userIdRent}")
-    public RestObject<List<RentUserIdRo>> queryRentDepartByUserId(@PathVariable int userIdRent){
-        return RestResponse.makeOKRsp(rentService.queryRentDepartByUserId(userIdRent));
+    @GetMapping("/queryRentDepartByUserId/{userId}")
+    public RestObject<List<RentUserIdRo>> queryRentDepartByUserId(@PathVariable int userId){
+        return RestResponse.makeOKRsp(rentService.queryRentDepartByUserId(userId));
     }
 
-    @ApiOperation("添加出租")
-    @PostMapping("/addRent/{userIdRent}")
-    public RestObject<String> addRent(@PathVariable int userIdRent,@RequestBody RentVo rentVo){
+    @UserLoginInfo
+    @ApiOperation("添加出租,url参数，userIdRent")
+    @PostMapping("/addRent/{userId}")
+    public RestObject<String> addRent(@PathVariable int userId,@RequestBody RentVo rentVo){
         rentVo.setCreateTime(LocalDateTime.now());
-        rentVo.setUserIdRent(userIdRent);
+        rentVo.setUserIdRent(userId);
         int i = rentService.addRent(rentVo);
         if (i==0){
             return RestResponse.makeOKRsp("添加成功!");
@@ -65,18 +73,25 @@ public class RentController {
     }
 
     //修改出租(id),地址,价格
+    @UserLoginInfo
     @ApiOperation("修改出租信息,地址,价格,描述")
-    @PostMapping("/updateRent/{id}")
-    public RestObject<String> updateRent(@PathVariable int id,@RequestBody RentVo rentVo){
-        rentVo.setUpdateTime(LocalDateTime.now());
-        int i = rentService.updateRent(id, rentVo);
-        if (i==0){
-            return RestResponse.makeOKRsp("修改成功!");
+    @PostMapping("/updateRent/{id}/{userId}")
+    public RestObject<String> updateRent(@PathVariable int id,@PathVariable int userId,@RequestBody RentVo rentVo){
+        RentRo rentRo = rentService.queryRentById(id);
+        if (userId != rentRo.getUserIdRent()){
+            return RestResponse.UserErrRsp("你无权修改!");
         }else {
-            return RestResponse.makeOKRsp("修改成功!");
+            rentVo.setUpdateTime(LocalDateTime.now());
+            int i = rentService.updateRent(id, rentVo);
+            if (i==0){
+                return RestResponse.makeOKRsp("修改成功!");
+            }else {
+                return RestResponse.makeOKRsp("修改成功!");
+            }
         }
     }
 
+    @UserLoginToken
     @ApiOperation("修改租赁人")
     @PostMapping("/updateRenter/{id}")
     public RestObject<String> updateRenter(@PathVariable int id,@RequestBody RentVo rentVo){
@@ -88,26 +103,38 @@ public class RentController {
         }
     }
 
+    @UserLoginInfo
     @ApiOperation("修改出租状态")
-    @PostMapping("/updateStatus/{id}")
-    public RestObject<String> updateStatus(@PathVariable int id,@RequestBody RentVo rentVo){
-        int i = rentService.updateStatus(id, rentVo);
-        if (i==0){
-            return RestResponse.makeOKRsp("修改成功!");
+    @PostMapping("/updateStatus/{id}/{userId}")
+    public RestObject<String> updateStatus(@PathVariable int id,@PathVariable int userId,@RequestBody RentVo rentVo){
+        RentRo rentRo = rentService.queryRentById(id);
+        if (userId != rentRo.getUserIdRent()){
+            return RestResponse.UserErrRsp("你无权修改!");
         }else {
-            return RestResponse.makeOKRsp("修改成功!");
+            int i = rentService.updateStatus(id, rentVo);
+            if (i==0){
+                return RestResponse.makeOKRsp("修改成功!");
+            }else {
+                return RestResponse.makeOKRsp("修改成功!");
+            }
         }
     }
 
     //删除租赁(id)
+    @UserLoginInfo
     @ApiOperation("逻辑删除出租")
-    @PostMapping("/deletedRent/{id}")
-    public RestObject<String> deleteRent(@PathVariable int id,@RequestBody RentVo rentVo){
-        int i = rentService.deleteRent(id, rentVo);
-        if (i==0){
-            return RestResponse.makeOKRsp("删除成功!");
+    @PostMapping("/deletedRent/{id}/{userId}")
+    public RestObject<String> deleteRent(@PathVariable int id,@PathVariable int userId,@RequestBody RentVo rentVo){
+        RentRo rentRo = rentService.queryRentById(id);
+        if (userId != rentRo.getUserIdRent()){
+            return RestResponse.UserErrRsp("你无权删除!");
         }else {
-            return RestResponse.makeOKRsp("删除成功!");
+            int i = rentService.deleteRent(id, rentVo);
+            if (i==0){
+                return RestResponse.makeOKRsp("删除成功!");
+            }else {
+                return RestResponse.makeOKRsp("删除成功!");
+            }
         }
     }
 }

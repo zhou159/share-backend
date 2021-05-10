@@ -2,11 +2,9 @@ package com.share.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.share.entity.Goods;
-import com.share.entity.User;
+import com.share.entity.Trolley;
 import com.share.mapper.GoodsMapper;
 import com.share.mapper.TrolleyMapper;
-import com.share.mapper.UserMapper;
-import com.share.ro.travelRo.TravelRo;
 import com.share.ro.trolleyRo.TrolleyRo;
 import com.share.vo.TrolleyVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +62,10 @@ public class TrolleyService {
     public int updateTrolley(int id,TrolleyVo trolleyVo) {
         trolleyMapper.updateTrolley(id, trolleyVo);
         return 0;
+    }
+
+    public Trolley queryById(int id){
+        return trolleyMapper.selectById(id);
     }
 
 

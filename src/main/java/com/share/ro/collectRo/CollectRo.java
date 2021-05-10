@@ -14,8 +14,8 @@ public class CollectRo {
     @ApiModelProperty("收藏id")
     private Integer id;
 
-//    @ApiModelProperty("收藏的用户id")
-//    private Integer userId;
+    @ApiModelProperty("收藏的用户id")
+    private Integer userId;
 
     @ApiModelProperty("收藏的交易物品id")
     private Integer goodsId;

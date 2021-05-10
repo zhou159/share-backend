@@ -34,4 +34,7 @@ public class UserRo {
 
     @ApiModelProperty(value = "用户信誉值")
     private Integer creditScore;
+
+    @ApiModelProperty(value = "token")
+    private String token;
 }

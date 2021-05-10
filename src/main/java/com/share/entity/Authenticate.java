@@ -40,7 +40,7 @@ public class Authenticate implements Serializable {
 
     @ApiModelProperty(value = "管理员nickname")
     @TableField("admin_uid")
-    private String adminUid;
+    private Integer adminUid;
 
     @ApiModelProperty(value = "审核图片")
     @TableField("authenticate_picture")

@@ -42,4 +42,7 @@ public class RentRo {
 
     @ApiModelProperty(value = "出租类型")
     private String type;
+
+    @ApiModelProperty(value = "出租状态（0：出租中，1：被租用中，2：空闲中；3：不再对外出租；4：洽谈中")
+    private String status;
 }

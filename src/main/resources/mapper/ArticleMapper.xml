@@ -4,7 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.share.mapper.ArticleMapper">
     <insert id="addArticle" parameterType="com.share.entity.Article">
-        insert into share.article (user_id,createtime,text) values (#{articleVo.userId},#{articleVo.createTime},#{articleVo.text})
+        insert into share.article (user_id,createtime,text,title)
+        values (#{articleVo.userId},#{articleVo.createTime},#{articleVo.text},#{articleVo.title})
     </insert>
 
     <update id="updateArticle" parameterType="com.share.entity.Article">
@@ -47,16 +48,16 @@
     </resultMap>
 
     <select id="queryArticleById" resultMap="Article2">
-        select a.id aid,a.title atitle,a.text atext,a.createtime acreatetime,a.updatetime aupdatetime,a.status astatus
+        select a.id aid,a.title atitle,a.text atext,a.createtime acreatetime,a.updatetime aupdatetime,a.status astatus,
                u.id uid,u.picture upicture,u.nickname unickname
         from share.user u,share.article a
-        where  u.id = a.user_id and id=#{id}
+        where  u.id = a.user_id and a.id=#{id}
     </select>
 
     <select id="queryArticleByUserId" resultMap="Article2" resultType="List">
         select a.id aid,a.title atitle,a.text atext,a.createtime acreatetime,a.updatetime aupdatetime,a.status astatus,
                u.id uid,u.picture upicture,u.nickname unickname
         from share.user u,share.article a
-        where  u.id = a.user_id and user_id = #{userId}
+        where  u.id = a.user_id and a.user_id = #{userId}
     </select>
 </mapper>

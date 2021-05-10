@@ -20,7 +20,7 @@ public interface UserMapper extends BaseMapper<User> {
     UserRo queryUserById(@Param("id")Integer id);
 
     //查询用户tel,useraccount
-    User queryUserByTA(@Param("tel")String tel,@Param("username") String username);
+    UserRo queryUserByTA(@Param("tel")String tel,@Param("username") String username);
 
     //登录:账号方式
     User queryByAccount(@Param("username") String username, @Param("password") String password);

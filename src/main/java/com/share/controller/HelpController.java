@@ -1,5 +1,7 @@
 package com.share.controller;
 
+import com.share.annotation.UserLoginInfo;
+import com.share.annotation.UserLoginToken;
 import com.share.result.RestObject;
 import com.share.result.RestResponse;
 import com.share.ro.helpRo.HelperRo;
@@ -21,6 +23,7 @@ public class HelpController {
     @Autowired
     HelpService helpService;
 
+    @UserLoginInfo
     @ApiOperation("新增帮助,userId为当前用户id")
     @PostMapping("/addHelp/{userId}")
     public RestObject<String> addHelp(@PathVariable int userId,@RequestBody HelpVo helpVo){
@@ -34,6 +37,7 @@ public class HelpController {
 
     }
 
+    @UserLoginInfo
     @ApiOperation("修改帮助(id:修改的帮助的id；userId:当前用户id)")
     @PostMapping("/updateHelp/{id}/{userId}")
     public RestObject<String> updateHelp(@PathVariable int id,@PathVariable int userId,@RequestBody HelpVo helpVo){
@@ -52,6 +56,7 @@ public class HelpController {
         }
     }
 
+    @UserLoginToken
     @ApiOperation("修改帮助人,用户点击'帮助他'按钮就调用此接口;参数：userIdHelper,为当千登录用户id")
     @PostMapping("/updateHelper/{id}")
     public RestObject<String> updateHelper(@PathVariable int id,@RequestBody HelpVo helpVo){
@@ -63,6 +68,7 @@ public class HelpController {
         }
     }
 
+    @UserLoginInfo
     @ApiOperation("删除帮助;id:帮助的id；userId:当前用户id")
     @PostMapping("/deleteHelp/{id}/{userId}")
     public RestObject<String> deleteHelp(@PathVariable int id,@PathVariable int userId){
@@ -79,30 +85,35 @@ public class HelpController {
         }
     }
 
+    @UserLoginToken
     @ApiOperation("查询所有求助中的外卖")
     @GetMapping("/queryAllDeliveryHelp")
     public RestObject<List<HelpRo>> queryAllDeliveryHelp(){
         return RestResponse.makeOKRsp(helpService.queryAllDeliveryHelp());
     }
 
+    @UserLoginToken
     @ApiOperation("查询所有求助中的快递")
     @GetMapping("/queryAllParcelHelp")
     public RestObject<List<HelpRo>> queryAllParcelHelp(){
         return RestResponse.makeOKRsp(helpService.queryAllParcelHelp());
     }
 
-    @ApiOperation("按帮助者id查询帮助")
+    @UserLoginToken
+    @ApiOperation("按帮助者id查询帮助,url参数:帮助者")
     @GetMapping("/queryHelperByUserId/{userIdHelper}")
     public RestObject<List<HelpRo>> queryHelperByUserId(@PathVariable int userIdHelper){
         return RestResponse.makeOKRsp(helpService.queryHelperByUserId(userIdHelper));
     }
 
-    @ApiOperation("按求助者id查询帮助")
-    @GetMapping("/queryHelpByUserId/{userIdHelp}")
-    public RestObject<List<HelperRo>> queryHelpByUserId(@PathVariable int userIdHelp){
-        return RestResponse.makeOKRsp(helpService.queryHelpByUserId(userIdHelp));
+    @UserLoginToken
+    @ApiOperation("按求助者id查询帮助,url参数:求助者")
+    @GetMapping("/queryHelpByUserId/{userId}")
+    public RestObject<List<HelperRo>> queryHelpByUserId(@PathVariable int userId){
+        return RestResponse.makeOKRsp(helpService.queryHelpByUserId(userId));
     }
 
+    @UserLoginToken
     @ApiOperation("按id查询帮助")
     @GetMapping("/queryById/{id}")
     public RestObject<HelpRo> queryHelpById(@PathVariable int id){

@@ -31,7 +31,7 @@
         insert into share.user (tel,password,nickname) values (#{tel},#{password},#{nickname})
     </insert>
 
-    <select id="queryUserByTA" resultType="com.share.entity.User">
+    <select id="queryUserByTA" resultType="com.share.ro.userRo.UserRo">
         select * from share.user
         <where>
             <choose>

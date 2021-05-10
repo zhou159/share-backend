@@ -1,5 +1,8 @@
 package com.share.controller;
 
+import com.share.annotation.UserLoginInfo;
+import com.share.annotation.UserLoginToken;
+import com.share.entity.History;
 import com.share.exceptions.ShareException;
 import com.share.result.RestObject;
 import com.share.result.RestResponse;
@@ -24,6 +27,7 @@ public class HistoryController {
     @Autowired
     HistoryService historyService;
 
+    @UserLoginToken
     @ApiOperation("新增历史记录")
     @PostMapping("/addHistory")
     public void addHistory(@RequestBody HistoryVo historyVo){
@@ -38,30 +42,38 @@ public class HistoryController {
         }
     }
 
+    @UserLoginInfo
     @ApiOperation("删除历史记录")
-    @PostMapping("/deleteHistory/{id}")
-    public RestObject<String> deleteHistory(@PathVariable int id){
-        int i = historyService.deleteHistory(id);
-        if (i==0){
-            return RestResponse.makeOKRsp("删除成功!");
+    @PostMapping("/deleteHistory/{id}/{userId}")
+    public RestObject<String> deleteHistory(@PathVariable int id,@PathVariable int userId){
+        History history = historyService.queryHistoryById(id);
+        if (userId != history.getUserId()){
+            return RestResponse.UserErrRsp("你无权删除");
         }else {
-            return RestResponse.makeErrRsp("删除失败!");
+            int i = historyService.deleteHistory(id);
+            if (i==0){
+                return RestResponse.makeOKRsp("删除成功!");
+            }else {
+                return RestResponse.makeErrRsp("删除失败!");
+            }
         }
-
     }
 
+    @UserLoginInfo
     @ApiOperation("通过用户id查询交易物品历史浏览记录")
     @GetMapping("/queryGoodsHistoryByUserId/{userId}")
     public RestObject<List<GoodsHistoryRo>> queryGoodsHistoryByUserId(@PathVariable int userId){
         return RestResponse.makeOKRsp(historyService.queryGoodsHistoryByUserId(userId));
     }
 
+    @UserLoginInfo
     @ApiOperation("通过用户id查询出租历史浏览记录")
     @GetMapping("/queryRentHistoryByUserId/{userId}")
     public RestObject<List<RentHsitoryRo>> queryRentHistoryByUserId(@PathVariable int userId){
         return RestResponse.makeOKRsp(historyService.queryRentHistoryByUserId(userId));
     }
 
+    @UserLoginInfo
     @ApiOperation("通过用户id查询出行历史浏览记录")
     @GetMapping("/queryTravelHistoryByUserId/{userId}")
     public RestObject<List<TravelHistoryRo>> queryTravelHistoryByUserId(@PathVariable int userId){
