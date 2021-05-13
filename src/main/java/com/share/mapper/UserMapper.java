@@ -2,10 +2,12 @@ package com.share.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.share.entity.User;
+import com.share.ro.userRo.OtherUserRo;
 import com.share.ro.userRo.UserRo;
 import com.share.vo.UserVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 
 import java.util.List;
@@ -18,6 +20,8 @@ public interface UserMapper extends BaseMapper<User> {
 
     //查询用户id
     UserRo queryUserById(@Param("id")Integer id);
+
+    OtherUserRo queryOtherUserById(@Param("id")int id);
 
     //查询用户tel,useraccount
     UserRo queryUserByTA(@Param("tel")String tel,@Param("username") String username);
@@ -32,7 +36,7 @@ public interface UserMapper extends BaseMapper<User> {
     int registerUsername(@Param("username") String username, @Param("password") String password,@Param("nickname")String nickname);
 
     //注册:电话号(增加)
-    int registerTel(@Param("tel") String tel, @Param("password") String password,@Param("nickname")String nickname);
+    int registerTel(@Param("tel") String tel, @Param("password") String password, @Param("nickname")String nickname);
 
     //修改密码
     int updateTP(@Param("id")Integer id,@Param("UserVo")UserVo userVo);

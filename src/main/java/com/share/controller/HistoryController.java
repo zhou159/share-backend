@@ -27,12 +27,13 @@ public class HistoryController {
     @Autowired
     HistoryService historyService;
 
-    @UserLoginToken
+    @UserLoginInfo
     @ApiOperation("新增历史记录")
-    @PostMapping("/addHistory")
-    public void addHistory(@RequestBody HistoryVo historyVo){
+    @PostMapping("/addHistory/{userId}")
+    public void addHistory(@RequestBody HistoryVo historyVo,@PathVariable int userId){
         HistoryRo history = historyService.queryHistoryByObjId(historyVo);
         historyVo.setLastTime(LocalDateTime.now());
+        historyVo.setUserId(userId);
         if (history!=null){
             historyService.updateHistory(historyVo);
         }else {

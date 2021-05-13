@@ -8,8 +8,6 @@ import com.auth0.jwt.interfaces.JWTVerifier;
 import com.share.annotation.PassToken;
 import com.share.annotation.UserLoginInfo;
 import com.share.annotation.UserLoginToken;
-import com.share.entity.User;
-import com.share.exceptions.ShareException;
 import com.share.exceptions.UserNotLoginException;
 import com.share.ro.userRo.UserRo;
 import com.share.service.UserService;
@@ -143,8 +141,6 @@ public class UserInterceptor implements HandlerInterceptor {
             }
         }
 
-
-
         return true;
     }
 
@@ -157,34 +153,4 @@ public class UserInterceptor implements HandlerInterceptor {
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
 
     }
-    //    @Override
-//    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-////        try {
-////            System.out.println("拦截器生效了！");
-////            List<String> asList = Arrays.asList("/user/loginusername", "/user/logintel", "/user/registerUsername" ,"/user/registertel","/user/verifyCode","/rent/**");
-////            String uri = request.getRequestURI();
-////            //1.设置放行路径
-////            if(asList.contains(uri)){
-////                return true;
-////            }
-////
-////            HttpSession session = request.getSession(true);
-////
-////            if(session.getAttribute("userInfo")  == null){
-////                response.setContentType("application/json; charset=utf-8");
-////                response.getWriter().print("{\"code\":401\",data\":\"登录信息失效\",\"msg\":\"fail\"}");
-////                return false;
-////            }
-////
-////
-////        } catch (IOException e) {
-////            e.printStackTrace();
-////        }
-////
-//        return false;
-//
-//
-//
-//
-//    }
 }

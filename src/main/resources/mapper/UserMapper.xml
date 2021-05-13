@@ -61,4 +61,8 @@
         </choose>
         where id=#{id}
     </update>
+
+    <select id="queryOtherUserById" resultType="com.share.ro.userRo.OtherUserRo">
+        select * from share.user where id=#{id}
+    </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.share.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.share.annotation.PassToken;
 import com.share.annotation.UserLoginInfo;
 import com.share.annotation.UserLoginToken;
@@ -47,6 +48,9 @@ public class UserController {
     @Autowired
     private TokenUtil tokenUtil;
 
+    @Autowired
+    private PhoneCodeUtil phoneCodeUtil;
+
     @UserLoginToken
     @ApiOperation("按userRo格式返回查询出的所有user对象")
     @GetMapping("/alluser")
@@ -58,6 +62,14 @@ public class UserController {
     @ApiOperation("按id查询用户,用户登陆后的部分信息。")
     @GetMapping("/users/{userId}")
     public RestObject<UserRo> queryUser(@PathVariable int userId){
+        return RestResponse.makeOKRsp(userService.queryUserById(userId));
+    }
+
+    @UserLoginToken
+    @ApiOperation("按id查询其他用户的部分信息。")
+    @GetMapping("/otherUser/{userId}")
+    public RestObject<UserRo> queryOtherUser(@PathVariable int userId){
+        System.out.println(userId);
         return RestResponse.makeOKRsp(userService.queryUserById(userId));
     }
 
@@ -94,7 +106,7 @@ public class UserController {
         if(userCode.equals("") || userVo.getTel().equals("") || userVo.getCheckCode().equals("")){
             throw new ShareException("电话号、密码或验证码不能为空!");
         }else{
-            if(userVo.getCheckCode().equals(code)) {
+            if(userCode.equals(code)) {
                 User user = userService.queryByTel(userVo);
                 if (user!=null) {
                     String token = tokenUtil.getToken(user);
@@ -124,7 +136,7 @@ public class UserController {
                 //通过前端传入的数据到数据库查询是否存在用户
                 UserRo user = userService.queryUserByTA(userVo);
                 if (user != null){
-                    throw new ShareException("用户名已被注册!");
+                    throw new ShareException("该账号已被注册!");
                 }else {
                     //随机生成10位数昵称
                     String nickName = RandomUtil.createRandom(10,Source.symbolNumLetter,Source.symbolNumLetter.getSources().length());
@@ -149,10 +161,10 @@ public class UserController {
     @ApiOperation("通过电话方式注册")
     @PostMapping("/registertel")
     public RestObject<String> registerTel(@RequestBody UserVo userVo,HttpSession session){
-        Object code = session.getAttribute("VerifyCode");
+        Object code = session.getAttribute("phoneCode");
         String userCode = userVo.getCheckCode().toUpperCase();
         if (userVo.getTel().equals("") || userVo.getPassword().equals("") || userCode.equals("")){
-            throw new ShareException("电话号码、密码或验证码不能为空!");
+            throw new ShareException("电话号码或验证码不能为空!");
         }else {
             if (userVo.getCheckCode().equals(code)){
                 UserRo user = userService.queryUserByTA(userVo);
@@ -200,17 +212,22 @@ public class UserController {
     @UserLoginInfo
     @ApiOperation("根据id修改手机号")
     @PostMapping("/updateTel/{userId}")
-    public RestObject<String> updateTel(@PathVariable int userId,@RequestBody UserVo userVo){
-        UserRo ro = userService.queryUserById(userId);
-        UserRo user = userService.queryUserByTA(userVo);
-        if(user!=null && user.getId()!=userId){
-            throw new ShareException("该手机号已被绑定!");
+    public RestObject<String> updateTel(@PathVariable int userId,@RequestBody UserVo userVo,HttpSession session){
+        Object phoneCode = session.getAttribute("phoneCode");
+        if (userVo.getCheckCode().equals("") || userVo.getCheckCode() != phoneCode){
+            throw new ShareException("验证码错误！");
         }else {
-            if(ro.getTel().equals(userVo.getTel())){
-                throw new ShareException("重复绑定!");
+            UserRo user = userService.queryUserByTA(userVo);
+            if(user!=null && user.getId()!=userId){
+                throw new ShareException("该手机号已被绑定!");
             }else {
-                userService.updateTP(userId, userVo);
-                return RestResponse.makeOKRsp("绑定成功");
+                UserRo ro = userService.queryUserById(userId);
+                if(ro.getTel().equals(userVo.getTel())){
+                    throw new ShareException("重复绑定!");
+                }else {
+                    userService.updateTP(userId, userVo);
+                    return RestResponse.makeOKRsp("绑定成功");
+                }
             }
         }
     }
@@ -232,7 +249,7 @@ public class UserController {
     @ApiOperation("根据id修改密码")
     @PostMapping("/updatePwd/{userId}")
     public RestObject<String> updatePwd(@PathVariable int userId, @RequestBody UserVo userVo,HttpSession session){
-        Object code = session.getAttribute("VerifyCode");
+        Object code = session.getAttribute("phoneCode");
         String userCode = userVo.getCheckCode().toUpperCase();
         if(userCode.equals("") || userVo.getPassword().equals("")){
             throw new ShareException("验证码或密码不能为空");
@@ -246,7 +263,7 @@ public class UserController {
         }
     }
 
-    @ApiOperation(value = "验证码")
+    @ApiOperation(value = "图形验证码")
     @GetMapping("/verifyCode")
     public void verifyCode(HttpSession session, HttpServletResponse response) {
         try {
@@ -271,6 +288,28 @@ public class UserController {
             baos.close();
         } catch (IOException e) {
             System.out.println(e);
+        }
+    }
+
+    @ApiOperation("短信验证码")
+    @PostMapping("/phoneCode")
+    public RestObject<String> phoneCode(@RequestBody UserVo userVo,HttpSession session){
+        if (userVo.getTel().equals("")){
+            throw new ShareException("手机号不能为空");
+        }else {
+            String random = RandomUtil.createRandom(6, Source.num, Source.num.getSources().length());
+            try {
+                String send = phoneCodeUtil.send(userVo.getTel(), random, "5");
+                JSONObject jsonObject = JSONObject.parseObject(send);
+                Object code = jsonObject.get("code");
+                if (String.valueOf(code).equals("0")){
+                    session.setAttribute("phoneCode",random);
+                    return RestResponse.makeOKRsp("验证码发送成功!");
+                }
+            } catch (Exception e) {
+                throw new ShareException("短信验证服务出错!");
+            }
+            return RestResponse.makeErrRsp("短信验证服务出错!");
         }
     }
 

@@ -30,6 +30,10 @@ public class UserService {
         return userMapper.queryUserById(id);
     }
 
+    public UserRo queryOtherUserById(int id){
+        return userMapper.queryUserById(id);
+    }
+
     //按用户名、密码查询用户
     public User queryByUsername(UserVo vo) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -38,12 +42,11 @@ public class UserService {
         return userMapper.selectOne(queryWrapper);
     }
 
-    //按电话号码、密码查询用户
+    //按电话号码查询用户
     public User queryByTel(UserVo vo){
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("tel",vo.getTel());
         queryWrapper.eq("password",vo.getPassword());
-        User user = userMapper.selectOne(queryWrapper);
         return userMapper.selectOne(queryWrapper);
     }
 
@@ -54,7 +57,7 @@ public class UserService {
 
     //按电话号码方式注册用户
     public void registerTel(UserVo vo){
-        userMapper.registerTel(vo.getTel(), vo.getPassword(),vo.getNickname());
+        userMapper.registerTel(vo.getTel(),vo.getPassword() ,vo.getNickname());
     }
 
     //通过电话号、用户名查询用户

@@ -18,7 +18,6 @@ public class TokenUtil {
         String token="";
         token= JWT.create()
                 .withClaim("id",user.getId())
-                .withClaim("nickname",user.getNickname())
                 .sign(Algorithm.HMAC256(String.valueOf(user.getId())));
         String uuid = UUID.randomUUID().toString().replace("-","").toUpperCase();
         redisUtil.setex(uuid,token,24 * 60);
