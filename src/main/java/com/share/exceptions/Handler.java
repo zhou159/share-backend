@@ -32,8 +32,14 @@ public class Handler {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK) //服务器的异常
     public RestObject<String> ExceptionHandler(Exception e){
-
         return RestResponse.makeErrRsp(e.getMessage());
+    }
+
+    @ExceptionHandler(PermissionException.class)  //就是定义处理什么异常
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK) //服务器的异常
+    public RestObject<String> PermissionHandler(Exception e){
+        return RestResponse.ErrRsp(402,"permission error",e.getMessage());
     }
 
 }

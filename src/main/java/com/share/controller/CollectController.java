@@ -27,7 +27,7 @@ public class CollectController {
     @ApiOperation("添加收藏,userId,goodsId")
     @PostMapping("/addCollect/{userId}")
     public RestObject<String> addCollect(@RequestBody CollectVo collectVo,@PathVariable int userId){
-        boolean b = collectService.isExist(collectVo);
+        boolean b = collectService.isExist(userId,collectVo);
         if (b){
             return RestResponse.makeErrRsp("该商品您已收藏过，请勿重复收藏!");
         }else {

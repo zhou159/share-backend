@@ -30,6 +30,6 @@ public class TrolleyRo {
     @ApiModelProperty(value = "交易物品库存")
     private Integer stock;
 
-    @ApiModelProperty(value = "购物车货物数量")
-    private Integer number;
+    @ApiModelProperty(value = "购物车状态(在购物车中，已生成订单)")
+    private String status;
 }

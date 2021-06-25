@@ -7,6 +7,7 @@ import com.share.mapper.GoodsMapper;
 import com.share.mapper.TrolleyMapper;
 import com.share.ro.trolleyRo.TrolleyRo;
 import com.share.vo.TrolleyVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,14 +59,33 @@ public class TrolleyService {
         return 0;
     }
 
-    //修改购物车数据(id)数量
-    public int updateTrolley(int id,TrolleyVo trolleyVo) {
-        trolleyMapper.updateTrolley(id, trolleyVo);
-        return 0;
-    }
+//    //修改购物车数据(id)数量
+//    public int updateTrolley(int id,TrolleyVo trolleyVo) {
+//        trolleyMapper.updateTrolley(id, trolleyVo);
+//        return 0;
+//    }
 
     public Trolley queryById(int id){
         return trolleyMapper.selectById(id);
+    }
+
+    public boolean queryByUGId(int userId,TrolleyVo trolleyVo){
+        QueryWrapper<Trolley> wrapper = new QueryWrapper<>();
+        wrapper.eq("goods_id",trolleyVo.getGoodsId())
+                .eq("user_id",userId);
+        Trolley trolley = trolleyMapper.selectOne(wrapper);
+        if (trolley!=null){
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    public void updateStatus(int id,String status){
+        Trolley trolley = new Trolley();
+        trolley.setId(id);
+        trolley.setStatus(status);
+        trolleyMapper.updateById(trolley);
     }
 
 

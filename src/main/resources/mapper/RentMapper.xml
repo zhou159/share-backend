@@ -5,19 +5,27 @@
 <mapper namespace="com.share.mapper.RentMapper">
 
     <select id="queryAllRentDepart" resultType="com.share.ro.rentRo.RentRo">
-        select * from share.rent where status = '0' and deleted = '0' and type = '房屋'
+        select * from share.rent where status = '出租中' and deleted = '0' and type = '房屋' ORDER BY rent.id DESC
     </select>
 
     <select id="queryAllRentPark" resultType="com.share.ro.rentRo.RentRo">
-        select * from share.rent where status = '0' and deleted = '0' and type = '车位'
+        select * from share.rent where status = '出租中' and deleted = '0' and type = '车位' ORDER BY rent.id DESC
     </select>
 
     <select id="queryRentParkByUserId" resultType="com.share.ro.rentRo.RentUserIdRo">
-        select * from share.rent where user_id_rent=#{userIdRent} and type = '车位'
+        select * from share.rent where user_id_rent=#{userIdRent} and type = '车位' and deleted = '0'
+    </select>
+
+    <select id="queryRentParkByUserIdRenter" resultType="com.share.ro.rentRo.RentUserIdRo">
+        select * from share.rent where user_id_renter=#{userIdRenter} and type = '车位' and deleted = '0'
     </select>
 
     <select id="queryRentDepartByUserId" resultType="com.share.ro.rentRo.RentUserIdRo">
-        select * from share.rent where user_id_rent=#{userIdRent} and type = '房屋'
+        select * from share.rent where user_id_rent=#{userIdRent} and type = '房屋' and deleted = '0'
+    </select>
+
+    <select id="queryRentDepartByUserIdRenter" resultType="com.share.ro.rentRo.RentUserIdRo">
+        select * from share.rent where user_id_renter=#{userIdRenter} and type = '房屋' and deleted = '0'
     </select>
 
     <insert id="addRent">
@@ -39,19 +47,20 @@
 
     <update id="deleteRent">
         update share.rent
-        set deleted = #{rentVo.deleted}
+        set deleted = '1'
         where id=#{id};
     </update>
 
     <update id="updateStatus">
         update share.rent
-        set status = #{rentVo.status}
+        set status = #{status}
         where id=#{id};
     </update>
 
     <resultMap id="rentById" type="com.share.ro.rentRo.RentRo">
         <result property="id" column="rid"/>
         <result property="userIdRent" column="ruidr"/>
+        <result property="userIdRenter" column="ruidur"/>
         <result property="type" column="rt"/>
         <result property="address" column="ra"/>
         <result property="price" column="rp"/>
@@ -60,10 +69,11 @@
         <result property="details" column="rd"/>
         <result property="picture" column="upic"/>
         <result property="nickname" column="unn"/>
+        <result property="status" column="rs"/>
     </resultMap>
 
     <select id="queryRentById" resultMap="rentById">
-        select r.id rid,r.user_id_rent ruidr,r.type rt,r.address ra,r.price rp,r.createtime rct,r.updatetime rut,r.details rd,
+        select r.id rid,r.user_id_rent ruidr,r.user_id_renter ruidur,r.type rt,r.address ra,r.price rp,r.createtime rct,r.updatetime rut,r.details rd,r.status rs,
                u.id uid,u.picture upic,u.nickname unn
         from share.rent r,share.user u
         where r.user_id_rent = u.id and r.id = #{id}

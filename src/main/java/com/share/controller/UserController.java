@@ -1,9 +1,9 @@
 package com.share.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.share.annotation.PassToken;
 import com.share.annotation.UserLoginInfo;
 import com.share.annotation.UserLoginToken;
+import com.share.exceptions.PermissionException;
 import com.share.exceptions.ShareException;
 import com.share.entity.User;
 import com.share.result.RestObject;
@@ -58,7 +58,7 @@ public class UserController {
         return RestResponse.makeOKRsp(userService.queryUserAll());
     }
 
-    @UserLoginInfo
+
     @ApiOperation("按id查询用户,用户登陆后的部分信息。")
     @GetMapping("/users/{userId}")
     public RestObject<UserRo> queryUser(@PathVariable int userId){
@@ -188,6 +188,41 @@ public class UserController {
     }
 
     @UserLoginInfo
+    @ApiOperation("添加管理员用户")
+    @PostMapping("/addAdminUser/{userId}")
+    public RestObject addAdminUser(@PathVariable int userId,@RequestBody UserVo userVo,HttpSession session){
+        Boolean admin = userService.checkAdmin(userId);
+        if (admin){
+            Object code = session.getAttribute("phoneCode");
+            String userCode = userVo.getCheckCode();
+            if (userVo.getTel().equals("") || userVo.getPassword().equals("") || userCode.equals("")){
+                throw new ShareException("电话号码或验证码不能为空!");
+            }else {
+                if (userVo.getCheckCode().equals(code)){
+                    UserRo user = userService.queryUserByTA(userVo);
+                    if (user != null){
+                        throw new ShareException("该电话号码已注册!");
+                    }else {
+                        String nickName = RandomUtil.createRandom(10,Source.symbolNumLetter,Source.symbolNumLetter.getSources().length());
+                        User user1 = userService.queryByNickName(nickName);
+                        while (user1!=null){
+                            nickName = RandomUtil.createRandom(10,Source.symbolNumLetter,Source.symbolNumLetter.getSources().length());
+                            user1 = userService.queryByNickName(nickName);
+                        }
+                        userVo.setNickname(nickName);
+                        userService.registerAdmin(userVo);
+                        return RestResponse.makeOKRsp("注册成功!");
+                    }
+                }else {
+                    throw new ShareException("验证码不正确，请重新输入!");
+                }
+            }
+        }else {
+            throw new PermissionException("无权限操作!");
+        }
+    }
+
+    @UserLoginInfo
     @ApiOperation("根据id修改用户部分信息")
     @PostMapping("/updateUser/{userId}")
     public RestObject<String> updateUser(@PathVariable int userId,@RequestBody UserVo userVo){
@@ -246,19 +281,42 @@ public class UserController {
     }
 
     @UserLoginInfo
-    @ApiOperation("根据id修改密码")
+    @ApiOperation("根据id修改密码;参数：密码，手机验证码")
     @PostMapping("/updatePwd/{userId}")
     public RestObject<String> updatePwd(@PathVariable int userId, @RequestBody UserVo userVo,HttpSession session){
         Object code = session.getAttribute("phoneCode");
         String userCode = userVo.getCheckCode().toUpperCase();
         if(userCode.equals("") || userVo.getPassword().equals("")){
-            throw new ShareException("验证码或密码不能为空");
+            throw new ShareException("验证码,密码不能为空");
         }else {
             if (userCode.equals(code)){
                 userService.updateTP(userId, userVo);
                 return RestResponse.makeOKRsp("修改成功");
             }else {
                 throw new ShareException("验证码不正确!请重新输入");
+            }
+        }
+    }
+
+    @ApiOperation("忘记密码;参数：手机号，密码，验证码")
+    @PostMapping("/forgetPwd")
+    public RestObject<String> forgetPwd(@RequestBody UserVo userVo,HttpSession session){
+        Object code = session.getAttribute("phoneCode");
+        String userCode = userVo.getCheckCode().toUpperCase();
+        if(userCode.equals("") || userVo.getPassword().equals("") || userVo.getTel().equals("")){
+            throw new ShareException("验证码,密码或手机号不能为空");
+        }else {
+            UserRo userRo = userService.queryUserByTA(userVo);
+            int userId = userRo.getId();
+            if (userRo!=null){
+                if (userCode.equals(code)){
+                    userService.updatePByT(userId, userVo);
+                    return RestResponse.makeOKRsp("修改成功");
+                }else {
+                    throw new ShareException("验证码不正确!请重新输入");
+                }
+            }else {
+                throw new ShareException("该手机号未绑定用户!");
             }
         }
     }

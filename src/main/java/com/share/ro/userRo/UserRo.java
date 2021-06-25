@@ -37,4 +37,7 @@ public class UserRo {
 
     @ApiModelProperty(value = "token")
     private String token;
+
+    @ApiModelProperty(value = "roles")
+    private String roles;
 }

@@ -1,6 +1,7 @@
 package com.share.ro.orderRo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -17,6 +18,7 @@ public class OrderRo {
     private String orderNo;
 
     @ApiModelProperty(value = "订单创建时间")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "交易物品id")
@@ -37,7 +39,7 @@ public class OrderRo {
     @ApiModelProperty(value = "用户id")
     private Integer userId;
 
-    @ApiModelProperty(value = "订单状态(0:正在交易；1:已完成；2:取消)")
+    @ApiModelProperty(value = "订单状态(0:正在交易；1:已完成；2:买家取消；3：卖家取消)")
     private String status;
 
 }

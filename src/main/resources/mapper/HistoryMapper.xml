@@ -38,6 +38,7 @@
         select h.id hid,h.goods_id hgids,h.user_id huid,h.lasttime hlt,g.goodsname ggn
         from share.history h,share.goods g
         where h.goods_id = g.id and h.type = '交易物品' and h.user_id = #{userId}
+        ORDER BY h.lasttime DESC
     </select>
 
     <resultMap id="rentHistory" type="com.share.ro.historyRo.RentHsitoryRo">
@@ -52,6 +53,7 @@
         select h.id hid,h.rent_id hrid,h.user_id huid,h.lasttime hlt,r.address ra
         from share.history h,share.rent r
         where h.rent_id = r.id and h.type = '出租' and h.user_id = #{userId}
+        ORDER BY h.lasttime DESC
     </select>
 
     <resultMap id="travelHistory" type="com.share.ro.historyRo.TravelHistoryRo">
@@ -66,19 +68,20 @@
         select h.id hid,h.travel_id htid,h.user_id huid,h.lasttime hlt,t.title tt
         from share.history h,share.travel t
         where h.travel_id = t.id and h.type = '出行' and h.user_id = #{userId}
+        ORDER BY h.lasttime DESC
     </select>
 
     <select id="queryHistoryByObjId" resultType="com.share.ro.historyRo.HistoryRo">
         select * from share.history
         <where>
             <if test="historyVo.goodsId != null">
-                goods_id=#{historyVo.goodsId} and user_id =#{historyVo.userId}
+                goods_id=#{historyVo.goodsId} and user_id =#{userId}
             </if>
             <if test="historyVo.rentId != null">
-                rent_id=#{historyVo.rentId} and user_id =#{historyVo.userId}
+                rent_id=#{historyVo.rentId} and user_id =#{userId}
             </if>
             <if test="historyVo.travelId != null">
-                travel_id=#{historyVo.travelId} and user_id =#{historyVo.userId}
+                travel_id=#{historyVo.travelId} and user_id =#{userId}
             </if>
         </where>
     </select>

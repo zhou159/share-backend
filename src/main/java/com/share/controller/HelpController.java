@@ -2,11 +2,15 @@ package com.share.controller;
 
 import com.share.annotation.UserLoginInfo;
 import com.share.annotation.UserLoginToken;
+import com.share.exceptions.PermissionException;
+import com.share.exceptions.ShareException;
 import com.share.result.RestObject;
 import com.share.result.RestResponse;
 import com.share.ro.helpRo.HelperRo;
 import com.share.ro.helpRo.HelpRo;
+import com.share.ro.userRo.UserRo;
 import com.share.service.HelpService;
+import com.share.service.UserService;
 import com.share.vo.HelpVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,7 +25,9 @@ import java.util.List;
 @RequestMapping("/help")
 public class HelpController {
     @Autowired
-    HelpService helpService;
+    private HelpService helpService;
+    @Autowired
+    private UserService userService;
 
     @UserLoginInfo
     @ApiOperation("新增帮助,userId为当前用户id")
@@ -57,14 +63,26 @@ public class HelpController {
     }
 
     @UserLoginToken
-    @ApiOperation("修改帮助人,用户点击'帮助他'按钮就调用此接口;参数：userIdHelper,为当千登录用户id")
+    @ApiOperation("修改帮助人,用户点击'帮助他'按钮就调用此接口;参数：userIdHelper,为当前登录用户id")
     @PostMapping("/updateHelper/{id}")
     public RestObject<String> updateHelper(@PathVariable int id,@RequestBody HelpVo helpVo){
-        int i = helpService.updateHelper(id, helpVo);
-        if (i==0){
-            return RestResponse.makeOKRsp("修改成功");
+        UserRo userRo = userService.queryUserById(helpVo.getUserIdHelper());
+        Integer creditScore = userRo.getCreditScore();
+        if (creditScore<100){
+            return RestResponse.makeErrRsp("您的信誉分不满足要求！需至少100分才能帮助别人");
         }else {
-            return RestResponse.makeErrRsp("修改失败");
+            HelpRo helpRo = helpService.queryHelpById(id);
+            if (helpRo.getUserIdHelp() == helpVo.getUserIdHelper()){
+                return RestResponse.makeErrRsp("自己无法选择自己的帮助！");
+            }else {
+                helpService.updateStatus(id,"1");
+                int i = helpService.updateHelper(id, helpVo);
+                if (i==0){
+                    return RestResponse.makeOKRsp("修改成功");
+                }else {
+                    return RestResponse.makeErrRsp("修改失败");
+                }
+            }
         }
     }
 
@@ -118,6 +136,43 @@ public class HelpController {
     @GetMapping("/queryById/{id}")
     public RestObject<HelpRo> queryHelpById(@PathVariable int id){
         return RestResponse.makeOKRsp(helpService.queryHelpById(id));
+    }
+
+    @UserLoginInfo
+    @ApiOperation("修改帮助状态")
+    @PostMapping("/updateStatus/{id}/{userId}")
+    public RestObject<String> updateStatus(@PathVariable int id,@PathVariable int userId,@RequestBody HelpVo helpVo){
+        HelpRo helpRo = helpService.queryHelpById(id);
+        if(helpRo.getUserIdHelp() == userId || helpRo.getUserIdHelper() == userId) {
+            if (helpVo.getStatus().equals("2") && userId == helpRo.getUserIdHelp() && helpRo.getStatus().equals("1")){
+                userService.updateCreditScore(helpRo.getUserIdHelp(),5,"add");
+                userService.updateCreditScore(helpRo.getUserIdHelper(),5,"add");
+                helpService.updateStatus(id,"2");
+                return RestResponse.makeOKRsp("帮助已完成！");
+            }else if (helpVo.getStatus().equals("3")){
+                if (helpRo.getStatus().equals("1")){
+                    return RestResponse.makeErrRsp("已有人正在帮助您，无法撤销！");
+                }else {
+                    helpService.updateStatus(id,"3");
+                    return RestResponse.makeOKRsp("帮助撤销成功！");
+                }
+            }else if (helpVo.getStatus().equals("4")){
+                userService.updateCreditScore(helpRo.getUserIdHelper(),5,"sub");
+                helpService.updateStatus(id,"0");
+                helpVo.setUserIdHelper(null);
+                helpService.updateHelper(id,helpVo);
+                return RestResponse.makeOKRsp("帮助已取消！TA的帮助已重新发布");
+            }else if (helpVo.getStatus().equals("5")){
+                userService.updateCreditScore(helpRo.getUserIdHelp(),5,"sub");
+                helpService.updateStatus(id,"5");
+                return RestResponse.makeOKRsp("帮助已取消！取消自己的帮助系统无法帮你再次发布！");
+            }else {
+                return RestResponse.makeErrRsp("错误！");
+            }
+        }else {
+            throw new PermissionException("你无权修改！");
+        }
+
     }
 
 }

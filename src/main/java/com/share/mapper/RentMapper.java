@@ -24,8 +24,14 @@ public interface RentMapper extends BaseMapper<Rent> {
     //查询房屋出租(出租人id)
     List<RentUserIdRo> queryRentDepartByUserId(@Param("userIdRent")int userIdRent);
 
+    //查询房屋出租(出租人id)
+    List<RentUserIdRo> queryRentDepartByUserIdRenter(@Param("userIdRenter")int userIdRenter);
+
     //查询车位出租(出租人id)
     List<RentUserIdRo> queryRentParkByUserId(@Param("userIdRent")int userIdRent);
+
+    //查询车位出租(出租人id)
+    List<RentUserIdRo> queryRentParkByUserIdRenter(@Param("userIdRenter")int userIdRenter);
 
     //添加出租
     int addRent(@Param("rentVo")RentVo rentVo);
@@ -37,8 +43,8 @@ public interface RentMapper extends BaseMapper<Rent> {
     int updateRenter(@Param("id")int id,@Param("rentVo")RentVo rentVo);
 
     //修改出租状态
-    int updateStatus(@Param("id")int id,@Param("rentVo")RentVo rentVo);
+    int updateStatus(@Param("id")int id,@Param("status")String status);
 
     //删除租赁(id)
-    int deleteRent(@Param("id")int id,@Param("rentVo")RentVo rentVo);
+    int deleteRent(@Param("id")int id);
 }

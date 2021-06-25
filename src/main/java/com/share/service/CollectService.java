@@ -1,5 +1,6 @@
 package com.share.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.share.entity.Collect;
 import com.share.mapper.CollectMapper;
 import com.share.ro.collectRo.CollectRo;
@@ -30,8 +31,8 @@ public class CollectService {
         return collectMapper.queryCollectById(id);
     }
 
-    public boolean isExist(CollectVo collectVo){
-        Collect collect = collectMapper.isExist(collectVo);
+    public boolean isExist(int userId,CollectVo collectVo){
+        Collect collect = collectMapper.isExist(userId,collectVo);
         if (collect != null){
             return true;
         }else {

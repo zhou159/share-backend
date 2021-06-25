@@ -21,7 +21,7 @@
         select g.id gid,g.user_id guid,g.goodsname ggn,g.details gd,g.price gp,g.createtime gct,g.stock gs,g.picture gpic,
                u.id uid,u.picture upic,u.nickname unn
         from share.goods g,share.user u
-        where g.user_id = u.id and g.status = '0'
+        where g.user_id = u.id and g.status = '出售中'
         ORDER BY g.createtime DESC
     </select>
 
@@ -52,7 +52,7 @@
 
     <insert id="addGoods" parameterType="com.share.entity.Goods">
         insert into share.goods (goodsname,details,price,user_id,stock,createtime)
-        values (#{goodsVo.goodsName},#{goodsVo.details},#{goodsVo.price},#{userId},#{goodsVo.stock},#{goodsVo.createTime})
+        values (#{goodsVo.goodsName},#{goodsVo.details},#{goodsVo.price},#{userId},1,#{goodsVo.createTime})
     </insert>
 
 <!--    名字，描述，价格，库存-->
@@ -64,7 +64,7 @@
 
     <update id="updateGoodsStatus">
         update share.goods
-        set status=#{goodsVo.status}
+        set status=#{status}
         where id=#{id}
     </update>
 

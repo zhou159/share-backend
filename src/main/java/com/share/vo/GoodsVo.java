@@ -30,6 +30,6 @@ public class GoodsVo {
     @ApiModelProperty("交易物品图片")
     private String picture;
 
-    @ApiModelProperty("交易物品状态（0：在售；1：已售，2：下架）")
+    @ApiModelProperty("交易物品状态（'出售中','已出售','已下架','交易中'）")
     private String status;
 }

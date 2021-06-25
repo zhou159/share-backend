@@ -25,9 +25,10 @@ public class OrderVo {
     @ApiModelProperty(value = "用户id")
     private Integer userId;
 
-    @ApiModelProperty(value = "订单状态(0:未完成；1:已完成；2:正在交易)")
+    @ApiModelProperty(value = "订单状态(0:正在交易；1:已完成；2:买家取消；3：卖家取消)")
     private String status;
 
     @ApiModelProperty(value = "订单逻辑删除(0：未删；1：删除)")
     private int deleted;
+
 }

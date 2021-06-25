@@ -48,8 +48,8 @@ public class HistoryService {
         return historyMapper.queryTravelHistoryByUserId(userId);
     }
 
-    public HistoryRo queryHistoryByObjId(HistoryVo historyVo){
-        return historyMapper.queryHistoryByObjId(historyVo);
+    public HistoryRo queryHistoryByObjId(HistoryVo historyVo,int userId){
+        return historyMapper.queryHistoryByObjId(historyVo,userId);
     }
 
     public History queryHistoryById(int id){

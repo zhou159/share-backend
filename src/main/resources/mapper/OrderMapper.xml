@@ -11,13 +11,21 @@
         <result property="GPicture" column="gpic"/>
         <result property="goodsPrice" column="gp"/>
         <result property="status" column="os"/>
+        <result property="orderNo" column="oon"/>
     </resultMap>
 
     <select id="queryOrderByUserId" resultMap="userOrders">
-        select o.id oid,o.goods_id ogid,o.status os,
+        select o.id oid,o.goods_id ogid,o.status os,o.order_no oon,
                g.goodsname ggn,g.picture gpic,g.price gp
         from share.order o,share.goods g
         where o.goods_id = g.id and o.user_id=#{userId} and o.deleted = '0'
+    </select>
+
+    <select id="queryOrderByUserIdG" resultMap="userOrders">
+        select o.id oid,o.goods_id ogid,o.status os,o.order_no,
+               g.goodsname ggn,g.picture gpic,g.price gp
+        from share.order o,share.goods g
+        where o.goods_id = g.id and o.user_id_g=#{userId} and o.deleted = '0'
     </select>
 
     <resultMap id="order" type="com.share.ro.orderRo.OrderRo">
@@ -29,13 +37,15 @@
         <result property="orderNo" column="oon"/>
         <result property="status" column="os"/>
         <result property="createTime" column="oct"/>
+        <result property="userId" column="ouid"/>
+        <result property="userIdG" column="ouidg"/>
     </resultMap>
 
     <select id="queryOrderById" resultMap="order">
-        select o.id oid,o.order_no oon,o.createtime oct,o.goods_id ogid,o.status os,
+        select o.id oid,o.goods_id ogid,o.order_no oon,o.createtime oct,o.status os,o.user_id ouid,o.user_id_g ouidg,
                g.goodsname ggn,g.picture gpic,g.price gp
         from share.order o,share.goods g
-        where o.goods_id = g.id and o.id=#{id}
+        where g.id = o.goods_id and o.id=#{id}
     </select>
 
     <select id="queryOrderByOrderNo" resultType="com.share.ro.orderRo.OrderRo">
@@ -43,8 +53,8 @@
     </select>
 
     <insert id="addOrder">
-        insert into share.order (createtime,order_no,goods_id,user_id,deleted)
-        values (#{orderVo.createTime},#{orderVo.orderNo},#{orderVo.goodsId},#{orderVo.userId},#{orderVo.deleted})
+        insert into share.order (createtime,order_no,goods_id,user_id,deleted,user_id_g)
+        values (#{orderVo.createTime},#{orderVo.orderNo},#{orderVo.goodsId},#{orderVo.userId},#{orderVo.deleted},#{orderVo.userIdG})
     </insert>
 
     <update id="updateOrder">

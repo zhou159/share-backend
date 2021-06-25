@@ -12,7 +12,4 @@ public class TrolleyVo {
 
     @ApiModelProperty(value = "购物车货物id")
     private Integer goodsId;
-
-    @ApiModelProperty(value = "购物车货物数量")
-    private Integer number;
 }

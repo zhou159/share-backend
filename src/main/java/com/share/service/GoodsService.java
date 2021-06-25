@@ -56,8 +56,8 @@ public class GoodsService {
         }
     }
 
-    public int updateGoodsStatus(int id,GoodsVo goodsVo){
-        int i = goodsMapper.updateGoodsStatus(id, goodsVo);
+    public int updateGoodsStatus(int id,String status){
+        int i = goodsMapper.updateGoodsStatus(id, status);
         if (i>0){
             return 0;
         }else {

@@ -26,7 +26,7 @@ public class RentVo {
     @ApiModelProperty(value = "出租价格")
     private BigDecimal price;
 
-    @ApiModelProperty(value = "出租状态（0：出租中，1：已出租）")
+    @ApiModelProperty(value = "出租状态（'出租中','被租用中','暂不对外出租'）")
     private String status;
 
     @ApiModelProperty(value = "逻辑删除（0：未删除，1：已删除）")

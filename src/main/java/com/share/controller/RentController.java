@@ -52,10 +52,24 @@ public class RentController {
     }
 
     @UserLoginToken
+    @ApiOperation("按租赁人id查询所有出租的车位")
+    @GetMapping("/queryRentParkByUserIdRenter/{userId}")
+    public RestObject<List<RentUserIdRo>> queryRentParkByUserIdRenter(@PathVariable int userId){
+        return RestResponse.makeOKRsp(rentService.queryRentParkByUserIdRenter(userId));
+    }
+
+    @UserLoginToken
     @ApiOperation("按出租人id查询所有出租的房屋")
     @GetMapping("/queryRentDepartByUserId/{userId}")
     public RestObject<List<RentUserIdRo>> queryRentDepartByUserId(@PathVariable int userId){
         return RestResponse.makeOKRsp(rentService.queryRentDepartByUserId(userId));
+    }
+
+    @UserLoginToken
+    @ApiOperation("按租赁人id查询所有出租的房屋")
+    @GetMapping("/queryRentDepartByUserIdRenter/{userId}")
+    public RestObject<List<RentUserIdRo>> queryRentDepartByUserIdRenter(@PathVariable int userId){
+        return RestResponse.makeOKRsp(rentService.queryRentDepartByUserIdRenter(userId));
     }
 
     @UserLoginInfo
@@ -68,7 +82,7 @@ public class RentController {
         if (i==0){
             return RestResponse.makeOKRsp("添加成功!");
         }else {
-            return RestResponse.makeOKRsp("添加失败!");
+            return RestResponse.makeErrRsp("添加失败!");
         }
     }
 
@@ -86,20 +100,37 @@ public class RentController {
             if (i==0){
                 return RestResponse.makeOKRsp("修改成功!");
             }else {
-                return RestResponse.makeOKRsp("修改成功!");
+                return RestResponse.makeErrRsp("修改失败!");
             }
         }
     }
 
     @UserLoginToken
     @ApiOperation("修改租赁人")
-    @PostMapping("/updateRenter/{id}")
-    public RestObject<String> updateRenter(@PathVariable int id,@RequestBody RentVo rentVo){
-        int i = rentService.updateRenter(id, rentVo);
-        if (i==0){
-            return RestResponse.makeOKRsp("修改成功!");
+    @PostMapping("/updateRenter/{id}/{userId}")
+    public RestObject<String> updateRenter(@PathVariable int id,@PathVariable int userId,@RequestBody RentVo rentVo){
+        RentRo rentRo = rentService.queryRentById(id);
+        if (rentVo.getUserIdRenter() == rentRo.getUserIdRent()){
+            return RestResponse.makeErrRsp("您无法租用自己的房子! ");
+        }else if (rentRo.getStatus().equals("被租用中")){
+            if (rentRo.getUserIdRenter() == userId){
+                rentVo.setUserIdRenter(null);
+                rentService.updateStatus(id,"出租中");
+                rentService.updateRenter(id, rentVo);
+                return RestResponse.makeOKRsp("取消租房成功！");
+            }else {
+                return RestResponse.makeErrRsp("该房子被租用中！");
+            }
+        }else if (rentRo.getStatus().equals("暂不对外出租")){
+            return RestResponse.makeErrRsp("该房子无法租用！");
         }else {
-            return RestResponse.makeOKRsp("修改成功!");
+            rentService.updateStatus(id,"被租用中");
+            int i = rentService.updateRenter(id, rentVo);
+            if (i==0){
+                return RestResponse.makeOKRsp("修改成功!");
+            }else {
+                return RestResponse.makeErrRsp("修改失败!");
+            }
         }
     }
 
@@ -110,12 +141,30 @@ public class RentController {
         RentRo rentRo = rentService.queryRentById(id);
         if (userId != rentRo.getUserIdRent()){
             return RestResponse.UserErrRsp("你无权修改!");
-        }else {
-            int i = rentService.updateStatus(id, rentVo);
+        }else if (rentVo.getStatus().equals("出租中") && !rentRo.getStatus().equals("出租中")){
+            rentVo.setUserIdRenter(null);
+            rentService.updateRenter(id,rentVo);
+            int i = rentService.updateStatus(id, rentVo.getStatus());
             if (i==0){
                 return RestResponse.makeOKRsp("修改成功!");
             }else {
+                return RestResponse.makeErrRsp("修改失败!");
+            }
+        }else if (rentVo.getStatus().equals("暂不对外出租") && !rentRo.getStatus().equals("出租中")){
+            rentVo.setUserIdRenter(null);
+            rentService.updateRenter(id,rentVo);
+            int i = rentService.updateStatus(id, rentVo.getStatus());
+            if (i==0){
                 return RestResponse.makeOKRsp("修改成功!");
+            }else {
+                return RestResponse.makeErrRsp("修改失败!");
+            }
+        }else {
+            int i = rentService.updateStatus(id, rentVo.getStatus());
+            if (i==0){
+                return RestResponse.makeOKRsp("修改成功!");
+            }else {
+                return RestResponse.makeErrRsp("修改失败!");
             }
         }
     }
@@ -124,16 +173,16 @@ public class RentController {
     @UserLoginInfo
     @ApiOperation("逻辑删除出租")
     @PostMapping("/deletedRent/{id}/{userId}")
-    public RestObject<String> deleteRent(@PathVariable int id,@PathVariable int userId,@RequestBody RentVo rentVo){
+    public RestObject<String> deleteRent(@PathVariable int id,@PathVariable int userId){
         RentRo rentRo = rentService.queryRentById(id);
         if (userId != rentRo.getUserIdRent()){
             return RestResponse.UserErrRsp("你无权删除!");
         }else {
-            int i = rentService.deleteRent(id, rentVo);
+            int i = rentService.deleteRent(id);
             if (i==0){
                 return RestResponse.makeOKRsp("删除成功!");
             }else {
-                return RestResponse.makeOKRsp("删除成功!");
+                return RestResponse.makeErrRsp("删除失败!");
             }
         }
     }

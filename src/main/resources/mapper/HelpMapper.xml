@@ -36,17 +36,18 @@
         <result property="upicture" column="upic"/>
         <result property="nickname" column="unickname"/>
         <result property="type" column="hty"/>
+        <result property="userIdHelper" column="huidr"/>
     </resultMap>
 
     <select id="queryAllDeliveryHelp" resultMap="allHelp">
-        select h.id hid,h.user_id_help huid,h.address ha,h.details hd,h.price hp,h.createtime hct,h.updatetime hut,h.type hty,
+        select h.id hid,h.user_id_help huid,h.user_id_helper huidr,h.address ha,h.details hd,h.price hp,h.createtime hct,h.updatetime hut,h.type hty,
                u.id uid,u.picture upic,u.nickname unickname
         from share.help h,share.user u
         where h.user_id_help = u.id and h.type = '外卖' and h.status = '0'
     </select>
 
     <select id="queryAllParcelHelp" resultMap="allHelp">
-        select h.id hid,h.user_id_help huid,h.address ha,h.details hd,h.price hp,h.createtime hct,h.updatetime hut,h.type hty,
+        select h.id hid,h.user_id_help huid,h.user_id_helper huidr,h.address ha,h.details hd,h.price hp,h.createtime hct,h.updatetime hut,h.type hty,
                u.id uid,u.picture upic,u.nickname unickname
         from share.help h,share.user u
         where h.user_id_help = u.id and h.type = '快递' and h.status = '0'

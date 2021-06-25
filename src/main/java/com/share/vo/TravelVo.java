@@ -16,10 +16,10 @@ public class TravelVo {
     private String destination;
 
     @ApiModelProperty(value = "出行出发时间")
-    private LocalDateTime departureTime;
+    private String departureTime;
 
     @ApiModelProperty(value = "出行返回时间")
-    private LocalDateTime returnTime;
+    private String returnTime;
 
     @ApiModelProperty(value = "出行描述")
     private String details;

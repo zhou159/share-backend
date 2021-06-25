@@ -5,19 +5,16 @@
 <mapper namespace="com.share.mapper.TrolleyMapper">
 
     <select id="queryTrolleyByUserId" resultType="com.share.ro.trolleyRo.TrolleyRo">
-        select * from share.trolley where user_id=#{userId}
+        select * from share.trolley where user_id=#{userId} and status='在购物车中'
     </select>
 
     <insert id="addTrolley">
-        insert into share.trolley (user_id,goods_id,number)
-                value (#{trolleyVo.userId},#{trolleyVo.goodsId},#{trolleyVo.number})
+        insert into share.trolley (user_id,goods_id)
+                value (#{trolleyVo.userId},#{trolleyVo.goodsId})
     </insert>
 
     <delete id="removeTrolley">
         delete from share.trolley where id=#{id}
     </delete>
 
-    <update id="updateTrolley">
-        update share.trolley set number=#{trolleyVo.number} where id=#{id}
-    </update>
 </mapper>

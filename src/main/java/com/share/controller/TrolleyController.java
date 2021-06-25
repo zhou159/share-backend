@@ -38,8 +38,13 @@ public class TrolleyController {
     @ApiOperation("加入购物车")
     @PostMapping("/addTrolley/{userId}")
     public RestObject<String> addTrolley(@RequestBody TrolleyVo trolleyVo,@PathVariable int userId) {
-        trolleyService.addTrolley(trolleyVo);
-        return RestResponse.makeOKRsp("加入成功!");
+        boolean b = trolleyService.queryByUGId(userId, trolleyVo);
+        if (b){
+            trolleyService.addTrolley(trolleyVo);
+            return RestResponse.makeOKRsp("加入成功!");
+        }else {
+            return RestResponse.makeErrRsp("该物品已加入购物车，请勿重复添加！+");
+        }
     }
 
     @UserLoginInfo
@@ -55,22 +60,22 @@ public class TrolleyController {
         }
     }
 
-    @UserLoginInfo
-    @ApiOperation("修改购物车中商品数量。参数：number,goods_id")
-    @PostMapping("/updateTrolley/{id}/{userId}")
-    public RestObject<String> updateTrolley(@PathVariable int id,@PathVariable int userId,@RequestBody TrolleyVo trolleyVo) {
-        Trolley trolley = trolleyService.queryById(id);
-        GoodsIdRo goodsIdRo = goodsService.queryGoodsById(trolleyVo.getGoodsId());
-        if (userId != trolley.getUserId()){
-            return RestResponse.UserErrRsp("你无权修改!");
-        }else {
-            if (trolley.getNumber() > goodsIdRo.getStock()){
-                return RestResponse.ErrRsp(401,"货物数量不足","货物数量不足");
-            }else {
-                trolleyService.updateTrolley(id, trolleyVo);
-                return RestResponse.makeOKRsp("修改成功!");
-            }
-        }
-    }
+//    @UserLoginInfo
+//    @ApiOperation("修改购物车中商品数量。参数：number,goods_id")
+//    @PostMapping("/updateTrolley/{id}/{userId}")
+//    public RestObject<String> updateTrolley(@PathVariable int id,@PathVariable int userId,@RequestBody TrolleyVo trolleyVo) {
+//        Trolley trolley = trolleyService.queryById(id);
+//        GoodsIdRo goodsIdRo = goodsService.queryGoodsById(trolleyVo.getGoodsId());
+//        if (userId != trolley.getUserId()){
+//            return RestResponse.UserErrRsp("你无权修改!");
+//        }else {
+//            if (trolley.getNumber() > goodsIdRo.getStock()){
+//                return RestResponse.ErrRsp(401,"货物数量不足","货物数量不足");
+//            }else {
+//                trolleyService.updateTrolley(id, trolleyVo);
+//                return RestResponse.makeOKRsp("修改成功!");
+//            }
+//        }
+//    }
 
 }

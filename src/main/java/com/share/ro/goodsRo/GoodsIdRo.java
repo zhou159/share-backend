@@ -1,5 +1,6 @@
 package com.share.ro.goodsRo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -23,6 +24,7 @@ public class GoodsIdRo {
     private BigDecimal price;
 
     @ApiModelProperty("交易物品上架时间")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     @ApiModelProperty("用户id")
@@ -40,7 +42,7 @@ public class GoodsIdRo {
     @ApiModelProperty("交易物品图片")
     private String gpicture;
 
-    @ApiModelProperty(value = "交易物品状态")
+    @ApiModelProperty(value = "交易物品状态（'出售中','已出售','已下架','交易中'）")
     private String status;
 
 }

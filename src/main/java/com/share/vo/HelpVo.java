@@ -35,4 +35,7 @@ public class HelpVo {
     @ApiModelProperty(value = "帮助修改时间")
     private LocalDateTime updateTime;
 
+    @ApiModelProperty("交易物品状态（0：求助中；1：帮助中；2：已完成；3：已撤销；4：帮助方取消帮助；5：求租方取消帮助）")
+    private String status;
+
 }

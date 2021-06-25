@@ -5,7 +5,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.JWTVerifier;
-import com.share.annotation.PassToken;
 import com.share.annotation.UserLoginInfo;
 import com.share.annotation.UserLoginToken;
 import com.share.exceptions.UserNotLoginException;
@@ -47,13 +46,13 @@ public class UserInterceptor implements HandlerInterceptor {
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
 
-        //检查是否有passtoken注释，有则跳过认证
-        if (method.isAnnotationPresent(PassToken.class)) {
-            PassToken passToken = method.getAnnotation(PassToken.class);
-            if (passToken.required()) {
-                return true;
-            }
-        }
+//        //检查是否有passtoken注释，有则跳过认证
+//        if (method.isAnnotationPresent(PassToken.class)) {
+//            PassToken passToken = method.getAnnotation(PassToken.class);
+//            if (passToken.required()) {
+//                return true;
+//            }
+//        }
 
         //检查有没有需要用户登录注解
         if (method.isAnnotationPresent(UserLoginToken.class)) {

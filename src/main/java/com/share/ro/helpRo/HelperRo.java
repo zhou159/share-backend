@@ -1,5 +1,6 @@
 package com.share.ro.helpRo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -38,9 +39,11 @@ public class HelperRo {
     private BigDecimal price;
 
     @ApiModelProperty(value = "帮助创建时间")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "帮助修改时间")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
 
 }

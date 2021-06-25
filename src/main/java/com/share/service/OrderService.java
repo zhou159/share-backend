@@ -18,6 +18,10 @@ public class OrderService {
         return orderMapper.queryOrderByUserId(userId);
     }
 
+    public List<UserOrderRo> queryOrderByUserIdG(int userId){
+        return orderMapper.queryOrderByUserIdG(userId);
+    }
+
     public OrderRo queryOrderById(int id){
         return orderMapper.queryOrderById(id);
     }
@@ -26,9 +30,13 @@ public class OrderService {
         return orderMapper.queryOrderByOrderNo(orderNo);
     }
 
-    public int addOrder(OrderVo orderVo){
-        orderMapper.addOrder(orderVo);
-        return 0;
+    public boolean addOrder(OrderVo orderVo){
+        int i = orderMapper.addOrder(orderVo);
+        if (i>0){
+            return true;
+        }else {
+            return false;
+        }
     }
 
     public int updateOrder(int id,OrderVo orderVo){
@@ -36,9 +44,13 @@ public class OrderService {
         return 0;
     }
 
-    public int deleteOrder(int id,OrderVo orderVo){
-        orderMapper.deleteOrder(id, orderVo);
-        return 0;
+    public boolean deleteOrder(int id,OrderVo orderVo){
+        int i = orderMapper.deleteOrder(id, orderVo);
+        if (i>0){
+            return true;
+        }else {
+            return false;
+        }
     }
 
 }

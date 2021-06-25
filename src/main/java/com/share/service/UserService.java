@@ -50,6 +50,7 @@ public class UserService {
         return userMapper.selectOne(queryWrapper);
     }
 
+
     //按用户名方式注册用户
     public void registerUsername(UserVo vo){
         userMapper.registerUsername(vo.getUsername(), vo.getPassword(), vo.getNickname());
@@ -58,6 +59,22 @@ public class UserService {
     //按电话号码方式注册用户
     public void registerTel(UserVo vo){
         userMapper.registerTel(vo.getTel(),vo.getPassword() ,vo.getNickname());
+    }
+
+    public Boolean checkAdmin(int userId){
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("id",userId).eq("type","a");
+        User user = userMapper.selectOne(userQueryWrapper);
+        if (user!=null){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    //新增管理员用户
+    public void registerAdmin(UserVo vo){
+        userMapper.registerAdmin(vo.getTel(),vo.getPassword() ,vo.getNickname());
     }
 
     //通过电话号、用户名查询用户
@@ -77,6 +94,12 @@ public class UserService {
     //更改电话号码、密码
     public int updateTP(int id,UserVo vo){
         userMapper.updateTP(id,vo);
+        return 0;
+    }
+
+    //忘记密码
+    public int updatePByT(int id,UserVo vo){
+        userMapper.updatePByT(id,vo);
         return 0;
     }
 
@@ -106,5 +129,28 @@ public class UserService {
             userRos.add(ro);
         }
         return userRos;
+    }
+
+    //修改用户信誉分
+    public boolean updateCreditScore(int userId,int creditScore,String option){
+        UserRo userRo = userMapper.queryUserById(userId);
+        Integer creditScore1 = userRo.getCreditScore();
+        User user = new User();
+        user.setId(userId);
+        if (option.equals("add")){
+            user.setCreditScore(creditScore+creditScore1);
+        }else if (option.equals("sub")){
+            if (creditScore1-creditScore <= 0){
+                user.setCreditScore(0);
+            }else {
+                user.setCreditScore(creditScore1-creditScore);
+            }
+        }
+        int i = userMapper.updateById(user);
+        if (i>0){
+            return true;
+        }else {
+            return false;
+        }
     }
 }

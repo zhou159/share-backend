@@ -34,7 +34,6 @@ public class ChatController {
         return ResponseEntity.ok("MSG SEND SUCCESS");
     }
 
-    @UserLoginInfo
     @ApiOperation("查询联系人列表")
     @GetMapping("/chatPerson/{userId}")
     public RestObject<List> queryChatPerson(@PathVariable int userId){
@@ -43,7 +42,6 @@ public class ChatController {
         return RestResponse.makeOKRsp(list);
     }
 
-    @UserLoginInfo
     @ApiOperation("从联系人列表删除某个联系人；参数：userIdTo")
     @PostMapping("/deleteChatPerson/{userId}")
     public RestObject<String> deleteChatPerson(@PathVariable int userId,@RequestBody ChatVo chatVo){
@@ -57,15 +55,15 @@ public class ChatController {
         }
     }
 
-    @UserLoginInfo
     @ApiOperation("新增联系人到联系人列表；参数：userIdTo")
     @PostMapping("/addChatPerson/{userId}")
-    public void addChatPerson(@PathVariable int userId, @RequestBody ChatVo chatVo){
+    public RestObject<String> addChatPerson(@PathVariable int userId, @RequestBody ChatVo chatVo){
         String key = userId + "ChatPerson";
         List list = redisUtil.lrangeAll(key);
         if (!list.contains(chatVo.getUserIdTo())){
             redisUtil.rPush(key,chatVo.getUserIdTo());
         }
+        return RestResponse.makeOKRsp("新增成功");
     }
 
     @ApiOperation("删除聊天信息")
@@ -79,7 +77,6 @@ public class ChatController {
         }
     }
 
-    @UserLoginInfo
     @ApiOperation("按用户id查询聊天信息")
     @GetMapping("/queryByUserId/{userId}")
     public RestObject<List<ChatRo>> queryByUserIdFrom(@PathVariable int userId){
@@ -107,7 +104,6 @@ public class ChatController {
         }
     }
 
-    @UserLoginInfo
     @ApiOperation("用户当前聊天用户")
     @PostMapping("/chatUserNow/{userId}")
     public RestObject<String> chatUserNow(@PathVariable int userId,@RequestBody ChatVo chatVo){
@@ -120,7 +116,6 @@ public class ChatController {
         }
     }
 
-    @UserLoginInfo
     @ApiOperation("从redis中删除某个键")
     @PostMapping("/deleteChatUserNowKey/{userId}")
     public RestObject<String> deleteChatUserNowKey(@PathVariable int userId){

@@ -32,5 +32,5 @@ public interface GoodsMapper extends BaseMapper<Goods> {
     int updateGoods(@Param("id")int id,@Param("goodsVo")GoodsVo goodsVo);
 
     //修改交易交易物品状态(删除)
-    int updateGoodsStatus(@Param("id")int id,@Param("goodsVo")GoodsVo goodsVo);
+    int updateGoodsStatus(@Param("id")int id,@Param("status")String status);
 }

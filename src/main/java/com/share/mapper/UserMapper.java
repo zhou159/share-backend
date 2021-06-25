@@ -38,7 +38,13 @@ public interface UserMapper extends BaseMapper<User> {
     //注册:电话号(增加)
     int registerTel(@Param("tel") String tel, @Param("password") String password, @Param("nickname")String nickname);
 
+    //注册:管理员(增加)
+    int registerAdmin(@Param("tel") String tel, @Param("password") String password, @Param("nickname")String nickname);
+
     //修改密码
     int updateTP(@Param("id")Integer id,@Param("UserVo")UserVo userVo);
+
+    //修改密码
+    int updatePByT(@Param("id")Integer id,@Param("UserVo")UserVo userVo);
 
 }

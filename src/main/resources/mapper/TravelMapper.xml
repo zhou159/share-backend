@@ -5,7 +5,7 @@
 <mapper namespace="com.share.mapper.TravelMapper">
 
     <select id="queryAllTravel" resultType="com.share.ro.travelRo.TravelRo">
-        select * from share.travel where deleted = '0' and status = '0'
+        select * from share.travel where deleted = '0' and status = '0' ORDER BY travel.id DESC
     </select>
 
     <select id="queryTravelByUserId" resultType="com.share.ro.travelRo.TravelRo">
@@ -14,15 +14,15 @@
 
     <insert id="addTravel">
         insert into share.travel
-        (user_id,destination,departure_time,return_time,details,createtime)
+        (user_id,destination,departure_time,return_time,details,createtime,title)
         values (#{travelVo.userId},#{travelVo.destination},#{travelVo.departureTime},
-        #{travelVo.returnTime},#{travelVo.details},#{travelVo.createTime})
+        #{travelVo.returnTime},#{travelVo.details},#{travelVo.createTime},#{travelVo.title})
     </insert>
 
     <update id="updateTravel">
         update share.travel
         set destination=#{travelVo.destination},departure_time=#{travelVo.departureTime},
-            return_time=#{travelVo.returnTime},details=#{travelVo.details},updatetime=#{travelVo.updateTime}
+        return_time=#{travelVo.returnTime},details=#{travelVo.details},updatetime=#{travelVo.updateTime},title=#{travelVo.title}
         where id=#{id};
     </update>
 

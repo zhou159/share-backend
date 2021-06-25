@@ -96,6 +96,7 @@ public class HelpService {
             if (map.containsKey(it.getUserIdHelp())) {
                 it.setUpicture(map.get(it.getUserIdHelp()).getPicture());
                 it.setNickname(map.get(it.getUserIdHelp()).getNickname());
+                it.setUserHelpAddress(map.get(it.getUserIdHelp()).getAddress());
             }
         });
 
@@ -142,6 +143,19 @@ public class HelpService {
         helpRo.setNickname(users.getNickname());
 
         return helpRo;
+    }
+
+    public boolean updateStatus(int id,String status){
+        Help help = new Help();
+        help.setId(id);
+        help.setStatus(status);
+        int i = helpMapper.updateById(help);
+        if (i>0){
+            return true;
+        }else {
+            return false;
+        }
+
     }
 
 }

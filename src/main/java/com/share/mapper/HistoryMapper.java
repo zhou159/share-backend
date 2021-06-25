@@ -30,7 +30,7 @@ public interface HistoryMapper extends BaseMapper<History> {
     List<TravelHistoryRo> queryTravelHistoryByUserId(@Param("userId")int userId);
 
     //查询历史记录(对象id),新增历史记录时查看,不单独使用
-    HistoryRo queryHistoryByObjId(@Param("historyVo")HistoryVo historyVo);
+    HistoryRo queryHistoryByObjId(@Param("historyVo")HistoryVo historyVo,@Param("userId")int userId);
 
     //修改时间
     int updateHistory(@Param("historyVo")HistoryVo historyVo);

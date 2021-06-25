@@ -34,6 +34,6 @@
     </select>
 
     <select id="isExist" resultType="com.share.entity.Collect">
-        select * from share.collect where user_id = #{collectVo.userId} and goods_id = #{collectVo.goodsId}
+        select * from share.collect where user_id = #{userId} and goods_id = #{collectVo.goodsId}
     </select>
 </mapper>

@@ -75,9 +75,19 @@ public class RentService {
         return rentMapper.queryRentParkByUserId(userIdRent);
     }
 
+    //查询车位出租(租赁人id)
+    public List<RentUserIdRo> queryRentParkByUserIdRenter(int userIdRenter){
+        return rentMapper.queryRentParkByUserIdRenter(userIdRenter);
+    }
+
     //查询房屋出租(出租人id)
     public List<RentUserIdRo> queryRentDepartByUserId(int userIdRent){
         return rentMapper.queryRentDepartByUserId(userIdRent);
+    }
+
+    //查询房屋出租(租赁人id)
+    public List<RentUserIdRo> queryRentDepartByUserIdRenter(int userIdRenter){
+        return rentMapper.queryRentDepartByUserIdRenter(userIdRenter);
     }
 
     //添加出租
@@ -111,8 +121,8 @@ public class RentService {
     }
 
     //修改出租状态
-    public int updateStatus(int id,RentVo rentVo){
-        int i = rentMapper.updateStatus(id, rentVo);
+    public int updateStatus(int id,String status){
+        int i = rentMapper.updateStatus(id, status);
         if (i>0){
             return 0;
         }else {
@@ -121,8 +131,8 @@ public class RentService {
     }
 
     //删除租赁(id)
-    public int deleteRent(int id,RentVo rentVo){
-        int i = rentMapper.deleteRent(id, rentVo);
+    public int deleteRent(int id){
+        int i = rentMapper.deleteRent(id);
         if (i>0){
             return 0;
         }else {

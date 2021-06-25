@@ -40,9 +40,13 @@ public class Trolley implements Serializable {
     @TableField("goods_id")
     private Integer goodsId;
 
-    @ApiModelProperty(value = "购物车货物数量")
-    @TableField("number")
-    private Integer number;
+//    @ApiModelProperty(value = "购物车货物数量")
+//    @TableField("number")
+//    private Integer number;
+
+    @ApiModelProperty(value = "购物车状态")
+    @TableField("status")
+    private String status;
 
 
 }

@@ -1,5 +1,6 @@
 package com.share.ro.articleRo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -26,9 +27,11 @@ public class ArticleRo {
     private String nickname;
 
     @ApiModelProperty("信息创建时间")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     @ApiModelProperty("信息更新时间")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
 
     @ApiModelProperty("信息内容")

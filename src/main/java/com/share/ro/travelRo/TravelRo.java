@@ -1,6 +1,7 @@
 package com.share.ro.travelRo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -26,18 +27,22 @@ public class TravelRo {
     private String destination;
 
     @ApiModelProperty(value = "出行出发时间")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime departureTime;
 
     @ApiModelProperty(value = "出行返回时间")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime returnTime;
 
     @ApiModelProperty(value = "出行描述")
     private String details;
 
     @ApiModelProperty(value = "出行创建时间")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private  LocalDateTime createTime;
 
     @ApiModelProperty(value = "出行修改时间")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private  LocalDateTime updateTime;
 
     @ApiModelProperty(value = "出行状态")

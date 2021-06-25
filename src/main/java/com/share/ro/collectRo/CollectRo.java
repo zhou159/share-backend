@@ -1,5 +1,6 @@
 package com.share.ro.collectRo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -30,5 +31,6 @@ public class CollectRo {
     private BigDecimal price;
 
     @ApiModelProperty("收藏创建时间")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 }

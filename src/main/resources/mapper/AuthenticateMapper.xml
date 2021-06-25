@@ -6,6 +6,8 @@
     <resultMap id="auth" type="com.share.ro.authenticateRo.AuthenticateRo">
         <result property="nickname" column="unickname"/>
         <result property="picture" column="up"/>
+        <result property="phone" column="ut"/>
+        <result property="trueName" column="utn"/>
         <result property="id" column="aid"/>
         <result property="userId" column="auid"/>
         <result property="adminUid" column="aan"/>
@@ -14,7 +16,7 @@
     </resultMap>
     <select id="findAuthenticateByAdminUserId" resultMap="auth" resultType="com.share.ro.authenticateRo.AuthenticateRo">
         select a.id aid,a.user_id auid,a.admin_uid aan,a.authenticate_picture aap,a.createtime acreatetime,
-               u.nickname unickname,u.picture up
+               u.nickname unickname,u.picture up,u.tel ut,u.truename utn
         from share.authenticate a,share.user u
         where u.id = a.user_id and a.admin_uid = #{userId} and a.status = '0'
     </select>

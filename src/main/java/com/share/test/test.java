@@ -28,4 +28,11 @@ public class test {
             System.out.println("null");
         }
     }
+
+    @Test
+    public void sss(){
+        int x =1;
+        int y=2;
+        System.out.println(x-y);
+    }
 }

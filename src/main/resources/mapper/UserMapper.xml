@@ -31,6 +31,11 @@
         insert into share.user (tel,password,nickname) values (#{tel},#{password},#{nickname})
     </insert>
 
+    <!--    新增管理员账户-->
+    <insert id="registerAdmin" parameterType="com.share.entity.User">
+        insert into share.user (tel,password,nickname,roles,status,creditScore) values (#{tel},#{password},#{nickname},'a','2',100)
+    </insert>
+
     <select id="queryUserByTA" resultType="com.share.ro.userRo.UserRo">
         select * from share.user
         <where>
@@ -65,4 +70,10 @@
     <select id="queryOtherUserById" resultType="com.share.ro.userRo.OtherUserRo">
         select * from share.user where id=#{id}
     </select>
+
+    <update id="updatePByT">
+        update share.user
+        set password = #{UserVo.password}
+        where id = #{id};
+    </update>
 </mapper>

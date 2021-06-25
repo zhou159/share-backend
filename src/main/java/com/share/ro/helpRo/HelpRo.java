@@ -1,5 +1,6 @@
 package com.share.ro.helpRo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -15,6 +16,9 @@ public class HelpRo {
 
     @ApiModelProperty(value = "求助人id")
     private Integer userIdHelp;
+
+    @ApiModelProperty(value = "求助人住址")
+    private String userHelpAddress;
 
     @ApiModelProperty(value = "求助人头像")
     private String upicture;
@@ -38,9 +42,14 @@ public class HelpRo {
     private BigDecimal price;
 
     @ApiModelProperty(value = "帮助创建时间")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "帮助修改时间")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
+
+    @ApiModelProperty("交易物品状态（0：求助中；1：帮助中；2：已完成；3：已撤销；4：帮助方取消帮助；5：求租方取消帮助）")
+    private String status;
 
 }

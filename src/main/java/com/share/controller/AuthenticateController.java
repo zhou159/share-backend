@@ -43,19 +43,28 @@ public class AuthenticateController {
     @PostMapping("/addAuthenticate/{userId}/{adminNickname}")
     //authvo传入参数：user_id,createtime,picture,admin_nickname
     public RestObject<String> addAuthenticate(@PathVariable int userId,@PathVariable String adminNickname ,MultipartFile file){
-        String s = minioUtil.upload(file, "authenticate");
-        AuthenticateVo authenticateVo = new AuthenticateVo();
-        User user = userService.queryByNickName(adminNickname);
-        if(s.equals("文件为空") || s.equals("上传失败")){
-            throw new ShareException("图片上传失败,请更换图片或重新尝试!");
-        }else {
-            authenticateVo.setUserId(userId);
-            authenticateVo.setAdminUid(user.getId());
-            authenticateVo.setCreateTime(LocalDateTime.now());
-            authenticateVo.setAuthenticatePicture(s);
-            authenticateService.addAuthenticate(authenticateVo);
-            return RestResponse.makeOKRsp("提交成功!");
+        UserRo userRo = userService.queryUserById(userId);
+        String status = userRo.getStatus();
+        if (status.equals("0")){
+            return RestResponse.makeErrRsp("请先进行身份认证！");
+        }else if(status.equals("2")){
+            return RestResponse.makeErrRsp("您已进行过小区认证，无需重复认证！");
+        }else if (status.equals("1")){
+            String s = minioUtil.upload(file, "authenticate");
+            AuthenticateVo authenticateVo = new AuthenticateVo();
+            User user = userService.queryByNickName(adminNickname);
+            if(s.equals("文件为空") || s.equals("上传失败")){
+                throw new ShareException("图片上传失败,请更换图片或重新尝试!");
+            }else {
+                authenticateVo.setUserId(userId);
+                authenticateVo.setAdminUid(user.getId());
+                authenticateVo.setCreateTime(LocalDateTime.now());
+                authenticateVo.setAuthenticatePicture(s);
+                authenticateService.addAuthenticate(authenticateVo);
+                return RestResponse.makeOKRsp("提交成功!");
+            }
         }
+        return null;
     }
 
     @UserLoginInfo
@@ -68,7 +77,7 @@ public class AuthenticateController {
             return RestResponse.UserErrRsp("你无权修改");
         }else {
             Integer userId_ = authenticate.getUserId();
-            UserRo user = userService.queryUserById(userId_);
+            UserRo user = userService.queryUserById(userId);
             UserVo vo = new UserVo();
             if(authenticateVo.isSuccess()){
                 user.setStatus("2");
@@ -84,7 +93,7 @@ public class AuthenticateController {
         }
     }
 
-    @ApiOperation("按管理员nickname查询审核")
+    @ApiOperation("按管理员id查询审核")
     @GetMapping("/findAuthenticateByAdminUserId/{userId}")
     public RestObject<List<AuthenticateRo>> findAuthenticateByAdminNickName(@PathVariable int userId){
         return RestResponse.makeOKRsp(authenticateService.findAuthenticateByAdminUserId(userId));

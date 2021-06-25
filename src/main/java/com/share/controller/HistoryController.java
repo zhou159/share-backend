@@ -31,7 +31,7 @@ public class HistoryController {
     @ApiOperation("新增历史记录")
     @PostMapping("/addHistory/{userId}")
     public void addHistory(@RequestBody HistoryVo historyVo,@PathVariable int userId){
-        HistoryRo history = historyService.queryHistoryByObjId(historyVo);
+        HistoryRo history = historyService.queryHistoryByObjId(historyVo,userId);
         historyVo.setLastTime(LocalDateTime.now());
         historyVo.setUserId(userId);
         if (history!=null){

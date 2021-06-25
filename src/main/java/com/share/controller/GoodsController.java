@@ -23,6 +23,7 @@ import java.util.List;
 @Api("交易物品模块")
 @RestController
 @RequestMapping("/goods")
+@CrossOrigin
 public class GoodsController {
     @Autowired
     GoodsService goodsService;
@@ -116,7 +117,7 @@ public class GoodsController {
         System.out.println(goodsAllRo);
         Integer gUserId = goodsAllRo.getUserId();
         if (gUserId == userId){
-            int i = goodsService.updateGoodsStatus(id,goodsVo);
+            int i = goodsService.updateGoodsStatus(id,goodsVo.getStatus());
             if(i==0) {
                 return RestResponse.makeOKRsp("修改成功!");
             }else {

@@ -1,5 +1,6 @@
 package com.share.ro.rentRo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -26,14 +27,16 @@ public class RentUserIdRo {
     private BigDecimal price;
 
     @ApiModelProperty(value = "出租创建时间")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "出租修改时间")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
 
     @ApiModelProperty(value = "出租描述")
     private String details;
 
-    @ApiModelProperty(value = "出租状态（0：出租中，1：被租用中，2：空闲中；3：不再对外出租；4：洽谈中")
+    @ApiModelProperty(value = "出租状态（'出租中','被租用中','暂停出租'")
     private String status;
 }
